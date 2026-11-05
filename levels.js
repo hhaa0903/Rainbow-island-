@@ -385,7 +385,8 @@ window.RAINBOW_DATA = {
     {
       id: "house",
       week: 3,
-      status: "preview",
+      status: "playable",
+      scene: "house",
       name: "Cozy House",
       zh: "家庭小屋",
       theme: "尋求幫忙、找物品、日常互動",
@@ -393,16 +394,158 @@ window.RAINBOW_DATA = {
       map: { x: 585, y: 205 },
       shardColor: "#F2D46B",
       unlock: { requires: ["dock"] },
-      host: { name: "Kitty", zh: "小貓" },
+      host: { id: "kitty", name: "Kitty", zh: "小貓", pitch: 1.3 },
+      cast: { mouse: { id: "mouse", name: "Mouse", zh: "小老鼠", pitch: 1.8 } },
+      intro: {
+        zh: "小貓 Kitty 的家亂糟糟，帽子和球都不見了！一起找一找、收拾玩具，再吃一塊小餅乾。",
+        parentNote: "一次一句"
+      },
       preview: {
         zh: "小貓找不到牠的帽子了！一起在小屋裡東找找、西看看，幫忙把東西收拾好。",
         sample: ["Hi!（複習）", "Help, please!（新）", "Here it is!（新）"]
+      },
+      steps: [
+        {
+          id: "meetKitty",
+          title: "認識小貓",
+          coop: "each",
+          pose: "wave",
+          lines: [
+            { en: "Hi! I'm Kitty.", zh: "嗨！我是小貓 Kitty。" },
+            { en: "What's your name?", zh: "你叫什麼名字？" }
+          ],
+          repeatLines: [{ en: "Hi! What's your name?", zh: "嗨！那你叫什麼名字？" }],
+          helper: { en: "{name}.", zh: "只說名字就可以。" },
+          zhTip: "複習碼頭學過的自我介紹。",
+          answers: { simple: ["{name}."], advanced: ["I'm {name}."] },
+          responses: { default: [{ en: "Hi, {name}! Come in!", zh: "嗨，{name}！請進！" }] },
+          feedback: ["hostWave"]
+        },
+        {
+          id: "askMouse",
+          title: "問新朋友名字（挑戰）",
+          challengeOnly: true,
+          coop: "alternate",
+          pose: "idle",
+          enter: ["show:mouse"],
+          lines: [{ en: "Look! A new friend!", zh: "你看！有新朋友！" }],
+          helper: { en: "What's your name?", zh: "你叫什麼名字？" },
+          zhTip: "這次換孩子問：What's your name?（你叫什麼名字？）牆角的小老鼠會回答。",
+          waitTip: "讓孩子試著問小老鼠的名字。需要時家長可以先小聲示範：What's your name?",
+          answers: { simple: ["What's your name?"], advanced: ["Hi! What's your name?"] },
+          listenWords: ["name", "what"],
+          responses: {
+            default: [
+              { en: "I'm Mouse!", zh: "我是小老鼠！", speaker: "mouse" },
+              { en: "Hi, friends!", zh: "嗨，朋友們！", speaker: "mouse" }
+            ]
+          },
+          feedback: ["hostHappy"]
+        },
+        {
+          id: "find",
+          title: "找帽子和球",
+          coop: "each",
+          pose: "idle",
+          lines: [
+            { en: "Oh no!", zh: "糟糕！" },
+            { en: "Where is my hat?", zh: "我的帽子在哪裡？" }
+          ],
+          repeatLines: [{ en: "Oh no! Where is my ball?", zh: "糟糕！我的球在哪裡？" }],
+          helper: { en: "Here it is!", zh: "在這裡！" },
+          zhTip: "新句子：Here it is!（在這裡！）。孩子可以先指一指想找的地方，再說 Here!",
+          answers: { simple: ["Here!"], advanced: ["Here it is!"] },
+          cues: [
+            { id: "box", icon: "box", label: "box", keywords: ["box"] },
+            { id: "bed", icon: "bed", label: "bed", keywords: ["bed"] },
+            { id: "chair", icon: "chair", label: "chair", keywords: ["chair"] }
+          ],
+          responses: { default: [{ en: "Yay! Thank you!", zh: "耶！謝謝你！" }] },
+          defaultCue: "box",
+          finds: ["hat", "ball"],
+          feedback: ["find"]
+        },
+        {
+          id: "tidy",
+          title: "一起收玩具",
+          coop: "together",
+          pose: "wave",
+          lines: [
+            { en: "Toys, toys, toys!", zh: "好多玩具！" },
+            { en: "Can you help me?", zh: "你可以幫我嗎？" }
+          ],
+          helper: { en: "Yes!", zh: "好！" },
+          zhTip: "孩子回答 Yes 或 Okay 就可以，也可以一起做收玩具的動作。",
+          answers: { simple: ["Yes!", "Okay!"], advanced: ["Yes, I can!"] },
+          listenWords: ["yes", "okay", "ok"],
+          responses: { default: [{ en: "Thank you! So clean!", zh: "謝謝！好乾淨！" }] },
+          feedback: ["hide:toysFloor", "show:toysBox", "hostHappy"]
+        },
+        {
+          id: "teddy",
+          title: "請小貓幫忙（挑戰）",
+          challengeOnly: true,
+          coop: "alternate",
+          pose: "listen",
+          lines: [{ en: "Oh! Your teddy is up there.", zh: "喔！你的小熊玩偶在上面。" }],
+          helper: { en: "Help, please!", zh: "請幫幫我！" },
+          zhTip: "新句子：Help, please!（請幫幫我！）需要別人幫忙時可以這樣說。",
+          waitTip: "玩偶放太高了，讓孩子試著請小貓幫忙。",
+          answers: { simple: ["Help, please!"], advanced: ["Kitty, help, please!"] },
+          listenWords: ["help", "please"],
+          responses: { default: [{ en: "Okay! Here you go!", zh: "好！給你！" }] },
+          feedback: ["hide:teddyTop", "giveToken:teddy"]
+        },
+        {
+          id: "cookie",
+          title: "吃小餅乾",
+          coop: "each",
+          pose: "cookie",
+          lines: [{ en: "Cookie?", zh: "要吃餅乾嗎？" }],
+          helper: { en: "Yes, please!", zh: "好，麻煩你！" },
+          zhTip: "Yes, please! 和碼頭的 Water, please 很像。不想吃也可以說 No, thank you.",
+          answers: { simple: ["Yes, please!", "No, thank you."], advanced: ["Yes, please! Thank you!"] },
+          cues: [
+            { id: "yes", icon: "cookie", label: "yes", keywords: ["yes", "please"] },
+            { id: "no", icon: "nope", label: "no", keywords: ["no"] }
+          ],
+          responses: {
+            yes: [{ en: "Here you go!", zh: "給你！" }],
+            no: [{ en: "Okay!", zh: "好喔！" }],
+            default: [{ en: "Here you go!", zh: "給你！" }]
+          },
+          defaultCue: "yes",
+          feedback: ["giveToken:cookie"]
+        },
+        {
+          id: "bye",
+          title: "揮手道別（挑戰）",
+          challengeOnly: true,
+          coop: "together",
+          pose: "wave",
+          lines: [{ en: "Bye, {name}!", zh: "掰掰，{name}！" }],
+          helper: { en: "Bye, Kitty!", zh: "掰掰，小貓！" },
+          zhTip: "跟小貓揮手說再見。",
+          answers: { simple: ["Bye!"], advanced: ["Bye, Kitty!", "Bye, Mouse!"] },
+          responses: { default: [{ en: "Come again!", zh: "再來玩喔！" }] },
+          feedback: ["waveBye"]
+        }
+      ],
+      ending: {
+        lines: [
+          { en: "Yay! All clean!", zh: "耶！都整理好了！" },
+          { en: "Thank you, friends!", zh: "謝謝你們，朋友！" }
+        ],
+        zh: "小貓的家整理好了，帽子和球也找到了！彩虹又多了一道顏色。",
+        feedback: ["hostHappy"],
+        nextChoices: ["shop", "station"]
       }
     },
     {
       id: "shop",
       week: 4,
-      status: "preview",
+      status: "playable",
+      scene: "shop",
       name: "Picnic Shop",
       zh: "野餐商店",
       theme: "選飲料、提出需求、道謝",
@@ -410,16 +553,145 @@ window.RAINBOW_DATA = {
       map: { x: 760, y: 360 },
       shardColor: "#7FC08A",
       unlock: { requires: ["dock"] },
-      host: { name: "Squirrel", zh: "松鼠" },
+      host: { id: "squirrel", name: "Squirrel", zh: "松鼠", pitch: 1.35 },
+      intro: {
+        zh: "松鼠的野餐商店開張了！挑一挑野餐要帶的飲料和點心，把野餐籃裝滿，記得說 please 和 thank you。",
+        parentNote: "一次一句"
+      },
       preview: {
         zh: "松鼠的野餐商店開張了！挑一挑要帶的飲料和點心，記得說 please 和 thank you。",
         sample: ["Water, please.（複習）", "Juice, please.（新）", "Thank you!（複習）"]
+      },
+      steps: [
+        {
+          id: "excuse",
+          title: "引起注意（挑戰）",
+          challengeOnly: true,
+          coop: "together",
+          pose: "idle",
+          enter: ["busy"],
+          lines: [{ en: "La la la...", zh: "啦啦啦⋯⋯（松鼠在忙，沒看到你們）" }],
+          helper: { en: "Excuse me!", zh: "不好意思！" },
+          zhTip: "新句子：Excuse me!（不好意思！）想請別人注意自己時可以說。",
+          waitTip: "松鼠在哼歌沒注意到。讓孩子試著說 Excuse me! 叫牠。",
+          answers: { simple: ["Excuse me!"], advanced: ["Excuse me! Hi!"] },
+          listenWords: ["excuse", "me"],
+          responses: { default: [{ en: "Oh! Hi! Sorry!", zh: "喔！嗨！不好意思！" }] },
+          feedback: ["attention"]
+        },
+        {
+          id: "welcome",
+          title: "歡迎光臨",
+          coop: "each",
+          pose: "wave",
+          lines: [{ en: "Hi! Welcome!", zh: "嗨！歡迎光臨！" }],
+          helper: { en: "Hi!", zh: "嗨！" },
+          zhTip: "打招呼就好。想多說可以加上：I'm Chloe.",
+          answers: { simple: ["Hi!"], advanced: ["Hi! I'm {name}."] },
+          responses: { default: [{ en: "Hi, {name}!", zh: "嗨，{name}！" }] },
+          feedback: ["hostWave"]
+        },
+        {
+          id: "drink",
+          title: "選飲料",
+          coop: "each",
+          pose: "idle",
+          lines: [{ en: "Water, milk, or juice?", zh: "要水、牛奶，還是果汁？" }],
+          helper: { en: "Water? Milk? Juice?", zh: "水？牛奶？果汁？" },
+          zhTip: "新單字：juice（果汁）。加上 please 更有禮貌：Juice, please.",
+          answers: {
+            simple: ["Water.", "Milk.", "Juice."],
+            advanced: ["Water, please.", "Milk, please.", "Juice, please."]
+          },
+          cues: [
+            { id: "water", icon: "water", label: "water", keywords: ["water"] },
+            { id: "milk", icon: "milk", label: "milk", keywords: ["milk"] },
+            { id: "juice", icon: "juice", label: "juice", keywords: ["juice"] }
+          ],
+          responses: { default: [{ en: "Here you go!", zh: "給你！" }] },
+          defaultCue: "juice",
+          feedback: ["giveToken"]
+        },
+        {
+          id: "count",
+          title: "要幾個蘋果（挑戰）",
+          challengeOnly: true,
+          coop: "alternate",
+          pose: "apple",
+          lines: [{ en: "Apples! How many?", zh: "蘋果！要幾個？" }],
+          helper: { en: "Two, please!", zh: "請給我兩個！" },
+          zhTip: "新句子：How many?（幾個？）。孩子說數字或比手指都可以。",
+          answers: {
+            simple: ["One.", "Two.", "Three."],
+            advanced: ["One, please.", "Two, please.", "Three, please."]
+          },
+          cues: [
+            { id: "n1", icon: "n1", label: "one", keywords: ["one", "1"] },
+            { id: "n2", icon: "n2", label: "two", keywords: ["two", "2", "too"] },
+            { id: "n3", icon: "n3", label: "three", keywords: ["three", "3"] }
+          ],
+          responses: { default: [{ en: "Okay! Here you go!", zh: "好！給你！" }] },
+          defaultCue: "n2",
+          feedback: ["giveToken"]
+        },
+        {
+          id: "snack",
+          title: "選點心",
+          coop: "each",
+          pose: "idle",
+          lines: [{ en: "Cookie or banana?", zh: "要餅乾還是香蕉？" }],
+          helper: { en: "Cookie? Banana?", zh: "餅乾？香蕉？" },
+          zhTip: "新單字：banana（香蕉）。說一個字或指一指都可以。",
+          answers: { simple: ["Cookie.", "Banana."], advanced: ["Cookie, please.", "Banana, please."] },
+          cues: [
+            { id: "cookie", icon: "cookie", label: "cookie", keywords: ["cookie"] },
+            { id: "banana", icon: "banana", label: "banana", keywords: ["banana"] }
+          ],
+          responses: { default: [{ en: "Yum! Here you go!", zh: "好吃喔！給你！" }] },
+          defaultCue: "cookie",
+          feedback: ["giveToken"]
+        },
+        {
+          id: "thanks",
+          title: "拿野餐籃、道謝",
+          coop: "together",
+          pose: "basket",
+          lines: [{ en: "Your picnic basket!", zh: "你們的野餐籃！" }],
+          helper: { en: "Thank you!", zh: "謝謝！" },
+          helperOnRequest: true,
+          zhTip: "松鼠把裝好的野餐籃遞過來。留一點時間讓孩子自然地說謝謝。",
+          waitTip: "留一點時間，讓孩子自然地說。先等約 5～10 秒，再提供提示。",
+          answers: { simple: ["Thank you!"], advanced: ["Thank you, Squirrel!"] },
+          listenWords: ["thank"],
+          responses: { default: [{ en: "You're welcome!", zh: "不客氣！" }] },
+          feedback: ["hostWave", "glowTokens"]
+        },
+        {
+          id: "bye",
+          title: "揮手道別（挑戰）",
+          challengeOnly: true,
+          coop: "together",
+          pose: "wave",
+          lines: [{ en: "Bye, {name}!", zh: "掰掰，{name}！" }],
+          helper: { en: "Bye, Squirrel!", zh: "掰掰，松鼠！" },
+          zhTip: "跟松鼠揮手說再見。",
+          answers: { simple: ["Bye!"], advanced: ["Bye, Squirrel!"] },
+          responses: { default: [{ en: "Have a nice picnic!", zh: "野餐愉快！" }] },
+          feedback: ["waveBye"]
+        }
+      ],
+      ending: {
+        lines: [{ en: "Let's go on a picnic!", zh: "我們去野餐吧！" }],
+        zh: "野餐籃裝滿了！彩虹又多了一道顏色。",
+        feedback: ["hostHappy"],
+        nextChoices: ["station", "house"]
       }
     },
     {
       id: "station",
       week: 5,
-      status: "preview",
+      status: "playable",
+      scene: "station",
       name: "Travel Station",
       zh: "旅行車站",
       theme: "買票、出發、簡單旅行需求",
@@ -427,10 +699,146 @@ window.RAINBOW_DATA = {
       map: { x: 540, y: 500 },
       shardColor: "#72B5D8",
       unlock: { requires: ["dock"] },
-      host: { name: "Elephant", zh: "小象站長" },
+      host: { id: "elephant", name: "Ellie", zh: "小象站長 Ellie", pitch: 0.75 },
+      intro: {
+        zh: "彩虹列車要出發了！小象站長 Ellie 在車站等大家。說說名字、拿一張車票，最後一起喊 Let's go!",
+        parentNote: "一次一句"
+      },
       preview: {
         zh: "小象站長在車站等大家。買一張票，跳上彩虹列車，準備出發去旅行！",
         sample: ["One ticket, please.（新）", "Let's go!（新）", "Bye!（複習）"]
+      },
+      steps: [
+        {
+          id: "hello",
+          title: "認識站長",
+          coop: "each",
+          pose: "wave",
+          lines: [
+            { en: "Hello! I'm Ellie.", zh: "哈囉！我是站長 Ellie。" },
+            { en: "What's your name?", zh: "你叫什麼名字？" }
+          ],
+          repeatLines: [{ en: "And what's your name?", zh: "那你叫什麼名字？" }],
+          helper: { en: "{name}.", zh: "只說名字就可以。" },
+          zhTip: "複習自我介紹。Hello 和 Hi 意思一樣。",
+          answers: { simple: ["{name}."], advanced: ["I'm {name}."] },
+          responses: { default: [{ en: "Hi, {name}!", zh: "嗨，{name}！" }] },
+          feedback: ["hostWave"]
+        },
+        {
+          id: "age",
+          title: "幾歲了（挑戰）",
+          challengeOnly: true,
+          coop: "each",
+          pose: "idle",
+          lines: [{ en: "How old are you?", zh: "你幾歲？" }],
+          helper: { en: "I'm {age}.", zh: "我 {age} 歲。" },
+          zhTip: "複習碼頭的年紀問答。說數字或比手指都可以。",
+          answers: { simple: ["{Age}."], advanced: ["I'm {age}."] },
+          listenWords: ["eight", "six", "8", "6"],
+          responses: { default: [{ en: "{Age}! Okay!", zh: "{age} 歲！好！" }] },
+          feedback: ["hopHost"]
+        },
+        {
+          id: "ticket",
+          title: "拿車票",
+          coop: "each",
+          pose: "ticket",
+          lines: [{ en: "Ticket?", zh: "要車票嗎？" }],
+          helper: { en: "One ticket, please.", zh: "請給我一張票。" },
+          zhTip: "新句子：One ticket, please.（請給我一張票）。只說 Yes, please 也可以。",
+          answers: { simple: ["Yes, please!", "Ticket, please."], advanced: ["One ticket, please."] },
+          listenWords: ["ticket", "please", "yes"],
+          responses: { default: [{ en: "Here you go!", zh: "給你！" }] },
+          feedback: ["giveToken:ticket"]
+        },
+        {
+          id: "where",
+          title: "要去哪裡（挑戰）",
+          challengeOnly: true,
+          coop: "alternate",
+          pose: "idle",
+          lines: [{ en: "Where to?", zh: "要去哪裡？" }],
+          helper: { en: "Beach? Mountain? Zoo?", zh: "海邊？山上？動物園？" },
+          zhTip: "想去哪裡都可以，說地名或指一指圖片。火車的牌子會換成那個地方。",
+          answers: {
+            simple: ["Beach!", "Mountain!", "Zoo!"],
+            advanced: ["The beach, please.", "The mountain, please.", "The zoo, please."]
+          },
+          cues: [
+            { id: "beach", icon: "beach", label: "beach", keywords: ["beach", "sea"] },
+            { id: "mountain", icon: "mountain", label: "mountain", keywords: ["mountain"] },
+            { id: "zoo", icon: "zoo", label: "zoo", keywords: ["zoo"] }
+          ],
+          responses: {
+            beach: [{ en: "The beach! Fun!", zh: "海邊！好好玩！" }],
+            mountain: [{ en: "The mountain! Wow!", zh: "山上！哇！" }],
+            zoo: [{ en: "The zoo! Cool!", zh: "動物園！好酷！" }],
+            default: [{ en: "Okay! Let's see!", zh: "好！我們看看！" }]
+          },
+          defaultCue: "beach",
+          feedback: ["trainSign"]
+        },
+        {
+          id: "mood",
+          title: "出發前的心情",
+          coop: "each",
+          pose: "idle",
+          lines: [{ en: "How are you today?", zh: "你今天好嗎？" }],
+          helper: { en: "Happy? Sleepy? Tired?", zh: "開心？想睡？累？" },
+          zhTip: "複習前幾關的心情句子。每一種心情都可以，孩子的表情會出現在火車窗戶上。",
+          answers: {
+            simple: ["Happy.", "Sleepy.", "Tired."],
+            advanced: ["I'm happy.", "I'm sleepy.", "I'm tired."]
+          },
+          cues: [
+            { id: "happy", icon: "happy", label: "happy", keywords: ["happy", "good", "great"] },
+            { id: "sleepy", icon: "sleepy", label: "sleepy", keywords: ["sleepy", "sleep"] },
+            { id: "tired", icon: "tired", label: "tired", keywords: ["tired"] }
+          ],
+          responses: {
+            happy: [{ en: "Great! Let's go!", zh: "太好了！出發吧！" }],
+            sleepy: [{ en: "You can sleep on the train.", zh: "你可以在火車上睡一下。" }],
+            tired: [{ en: "Sit down and rest.", zh: "坐下來休息一下。" }],
+            default: [{ en: "Thank you for telling me.", zh: "謝謝你告訴我。" }]
+          },
+          feedback: ["windowFace"]
+        },
+        {
+          id: "go",
+          title: "一起出發",
+          coop: "together",
+          pose: "wave",
+          lines: [
+            { en: "All aboard!", zh: "大家上車囉！" },
+            { en: "Ready?", zh: "準備好了嗎？" }
+          ],
+          helper: { en: "Let's go!", zh: "出發吧！" },
+          zhTip: "新句子：Let's go!（出發吧！）大家一起大聲說！",
+          answers: { simple: ["Let's go!", "Yes!"], advanced: ["Yes! Let's go!"] },
+          listenWords: ["go", "yes"],
+          responses: { default: [{ en: "Choo choo! Here we go!", zh: "嘟嘟！出發囉！" }] },
+          feedback: ["trainGo"]
+        },
+        {
+          id: "bye",
+          title: "揮手道別（挑戰）",
+          challengeOnly: true,
+          coop: "together",
+          pose: "wave",
+          lines: [{ en: "Bye, {name}!", zh: "掰掰，{name}！" }],
+          helper: { en: "Bye, Ellie!", zh: "掰掰，Ellie！" },
+          zhTip: "火車開動了，跟站長揮手說再見。",
+          answers: { simple: ["Bye!"], advanced: ["Bye, Ellie!"] },
+          responses: { default: [{ en: "Have a nice trip!", zh: "旅途愉快！" }] },
+          feedback: ["waveBye"]
+        }
+      ],
+      ending: {
+        lines: [{ en: "Look! The rainbow!", zh: "你看！彩虹！" }],
+        zh: "彩虹列車出發了！彩虹又多了一道顏色。",
+        feedback: ["trainAway"],
+        nextChoices: ["forest", "house"]
       }
     }
   ]

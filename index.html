@@ -103,7 +103,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
 .bubble .ln { display: block; opacity: .55; transition: opacity .2s; }
 .bubble .ln.now, .bubble.idle .ln { opacity: 1; }
 .bubble .who-says { display: block; font-size: .62em; color: var(--coral-deep); font-weight: 700; }
-.tray { position: absolute; top: 4%; left: 2.5%; display: flex; gap: 8px; }
+.tray { position: absolute; top: 4%; left: 2.5%; display: flex; flex-wrap: wrap; gap: 8px; max-width: 29%; }
 .badge { width: clamp(44px, 12.5cqw, 100px); aspect-ratio: 1; border-radius: 50%; background: var(--butter); border: 5px solid var(--coral); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; box-shadow: 0 3px 0 rgba(54,66,74,.15); animation: pop .6s cubic-bezier(.3,1.6,.5,1) both; }
 .badge.joey { border-color: var(--forest); }
 .badge .bname { font-family: var(--font-display); font-weight: 800; font-size: clamp(.7rem, 2.2cqw, 1.15rem); line-height: 1; }
@@ -161,8 +161,29 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
 @keyframes wave { 0%,100% { transform: rotate(-150deg); } 50% { transform: rotate(-120deg); } }
 .pose-give .arm-r, .pose-drinks .arm-r { transform: rotate(-78deg); }
 .pose-listen .arm-r { transform: rotate(-165deg); }
-.pose-apple .arm-r { transform: rotate(-78deg); }
-.pose-apple .held-apple { opacity: 1; transform: none; }
+.pose-apple .arm-r, .pose-cookie .arm-r, .pose-ticket .arm-r, .pose-basket .arm-r { transform: rotate(-78deg); }
+.pose-apple .held-apple, .pose-cookie .held-cookie, .pose-ticket .held-ticket, .pose-basket .held-basket { opacity: 1; transform: none; }
+.hat-on { opacity: 0; transition: opacity .4s; }
+.has-hat .hat-on { opacity: 1; }
+.notes { opacity: 0; transition: opacity .4s; }
+.busy .notes { opacity: 1; }
+.busy .notes path { animation: drift 1.2s ease-in-out infinite alternate; }
+.critter { transform-box: fill-box; transform-origin: 50% 100%; }
+.critter.talking { animation: chirp .28s ease-in-out infinite alternate; }
+.pop-item { opacity: 0; transform: scale(.3); transform-box: fill-box; transform-origin: 50% 100%; transition: opacity .5s, transform .6s cubic-bezier(.3,1.5,.5,1); }
+.pop-item.in { opacity: 1; transform: none; }
+.fade { transition: opacity .6s; }
+.fade.out { opacity: 0; }
+.find-item { opacity: 0; transition: opacity .4s; }
+.find-item.in { opacity: 1; }
+.train-win .face { opacity: 0; transition: opacity .5s; }
+.train-win.in .face { opacity: 1; }
+#train { transition: transform 1.8s ease-in-out; }
+.puff { opacity: 0; transform-box: fill-box; transform-origin: center; }
+#train.go .puff { animation: puff 1.5s ease-out infinite; }
+#train.go .puff:nth-child(2) { animation-delay: .5s; }
+#train.go .puff:nth-child(3) { animation-delay: 1s; }
+@keyframes puff { 0% { opacity: .9; transform: scale(.5); } 100% { opacity: 0; transform: translateY(-46px) scale(1.6); } }
 .lids { opacity: 0; transition: opacity .8s; }
 .tired .lids { opacity: 1; }
 .tired.b-bob { animation-duration: 5.5s; }
@@ -177,8 +198,9 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
 @keyframes flap { to { transform: rotate(-35deg); } }
 .flower .petals { transform-box: fill-box; transform-origin: center; transition: fill .6s; }
 .flower.bloom .petals { animation: pop .7s cubic-bezier(.3,1.6,.5,1) both; }
-.token { width: clamp(40px, 10cqw, 80px); aspect-ratio: 1; border-radius: 50%; background: var(--paper); border: 4px solid var(--coral); box-sizing: border-box; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 3px 0 rgba(54,66,74,.15); animation: pop .6s cubic-bezier(.3,1.6,.5,1) both; }
+.token { width: clamp(36px, 8.4cqw, 72px); aspect-ratio: 1; border-radius: 50%; background: var(--paper); border: 4px solid var(--coral); box-sizing: border-box; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 3px 0 rgba(54,66,74,.15); animation: pop .6s cubic-bezier(.3,1.6,.5,1) both; }
 .token.joey { border-color: var(--forest); }
+.token.gifted { animation: glow 1.8s ease-in-out 2; }
 .token svg { width: 66%; height: 66%; }
 .token .tname { position: absolute; bottom: -18%; left: 50%; transform: translateX(-50%); background: var(--butter); border-radius: 999px; padding: 0 6px; font-family: var(--font-display); font-weight: 800; font-size: clamp(.6rem, 1.8cqw, .9rem); line-height: 1.3; white-space: nowrap; }
 .hearts { opacity: 0; }
@@ -419,7 +441,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
     <ol>
       <li>首頁選「Chloe 玩」「Joey 玩」或「姊妹一起玩」。</li>
       <li>開場時可以選「簡單模式」或「挑戰模式」（多幾組對話，例如問年紀、反過來問小兔子、道別）。</li>
-      <li>在地圖點可以出發的地點（迎賓碼頭；完成後心情森林也會打開），家長先讀開場故事，按「出發」。</li>
+      <li>在地圖點可以出發的地點。先玩迎賓碼頭，完成後其他四個地點都會打開。家長先讀開場故事，按「出發」。</li>
       <li>島上的動物說一句話。孩子試著回應：一個字、名字、手勢、跟著示範說都可以。</li>
       <li>需要時按「再聽一次」「需要幫忙」→「英文小幫手」，或由家長打開「中文小提示」。</li>
       <li>家長按「繼續冒險」，看看動物和場景的變化，再按「下一段」。</li>
@@ -496,7 +518,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
     <section>
       <h3>功能說明與限制</h3>
       <ul class="muted">
-        <li>目前可以玩「迎賓碼頭」和「心情森林」（完成碼頭後打開）；其他三個地點是故事預告。</li>
+        <li>五個地點都可以玩：先完成「迎賓碼頭」，其他四個地點就會打開，順序隨孩子選。</li>
         <li>英文語音使用瀏覽器內建的語音合成，聲音依裝置而不同。沒有聲音時，請家長念出泡泡裡的英文。</li>
         <li>遊戲<b>不會自動判斷</b>孩子說了什麼；是否繼續由家長決定。</li>
         <li>麥克風功能為選用，若裝置不支援或拒絕權限，遊戲照常進行。</li>
@@ -566,9 +588,26 @@ const ICONS = {
   heart: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 55C11 40 6 27 13 18c7-9 16-6 19 3 3-9 12-12 19-3 7 9 2 22-19 37z" fill="#F28B82" stroke="#C95E55" stroke-width="2.5"/><path d="M19 24q2-5 7-5" stroke="#FFFDF7" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></svg>`,
   nope: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" fill="#FBE5A0" stroke="#E0B84A" stroke-width="3"/><circle cx="25" cy="29" r="2.8" fill="#36424A"/><circle cx="39" cy="29" r="2.8" fill="#36424A"/><path d="M26 40h12" stroke="#36424A" stroke-width="3" stroke-linecap="round"/><path d="M5 24q-3 8 0 16M59 24q3 8 0 16M10 27q-2 5 0 10M54 27q2 5 0 10" stroke="#C99B2E" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
   apple: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 18c-6-5-20-4-21 11-1 14 9 28 16 28 3 0 3-1 5-1s2 1 5 1c7 0 17-14 16-28-1-15-15-16-21-11z" fill="#E8766C" stroke="#C95E55" stroke-width="2.5"/><path d="M32 18c0-5 1-9 4-12" stroke="#8A6A4A" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M35 12c4-6 12-6 14-3-4 5-10 5-14 3z" fill="#7DB98A"/><path d="M19 28q2-6 8-7" stroke="#FFFDF7" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/></svg>`,
+  box: `<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="8" y="26" width="48" height="30" rx="4" fill="#FBE5A0" stroke="#C99B2E" stroke-width="3"/><rect x="4" y="18" width="56" height="10" rx="3" fill="#F4AE62" stroke="#C99B2E" stroke-width="3"/><path d="M32 28v28" stroke="#C99B2E" stroke-width="3"/></svg>`,
+  bed: `<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="5" y="18" width="10" height="38" rx="3" fill="#C99B6A"/><rect x="10" y="34" width="48" height="16" rx="4" fill="#FFFDF7" stroke="#B9C2C6" stroke-width="2.5"/><rect x="26" y="30" width="32" height="20" rx="4" fill="#F28B82"/><ellipse cx="20" cy="33" rx="8" ry="5" fill="#CDEDF2"/><path d="M13 50v8M54 50v8" stroke="#A87C52" stroke-width="4" stroke-linecap="round"/></svg>`,
+  chair: `<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="18" y="8" width="7" height="50" rx="3" fill="#A87C52"/><rect x="18" y="10" width="26" height="16" rx="4" fill="#7DB98A"/><rect x="18" y="32" width="32" height="8" rx="3" fill="#C99B6A"/><rect x="43" y="36" width="7" height="22" rx="3" fill="#A87C52"/></svg>`,
+  cookie: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="24" fill="#E0B57C" stroke="#A87C52" stroke-width="3"/><circle cx="24" cy="26" r="3.5" fill="#6B4A3A"/><circle cx="38" cy="22" r="3" fill="#6B4A3A"/><circle cx="37" cy="38" r="3.5" fill="#6B4A3A"/><circle cx="22" cy="40" r="3" fill="#6B4A3A"/></svg>`,
+  ball: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="24" fill="#72B5D8"/><path d="M32 8a24 24 0 0 1 24 24H32z" fill="#F28B82"/><path d="M32 56a24 24 0 0 1-24-24h24z" fill="#FBE5A0"/><circle cx="32" cy="32" r="24" fill="none" stroke="#2E7C90" stroke-width="3"/></svg>`,
+  hat: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 38 Q32 6 54 38Z" fill="#F28B82" stroke="#C95E55" stroke-width="3"/><ellipse cx="32" cy="38" rx="26" ry="9" fill="#F28B82" stroke="#C95E55" stroke-width="3"/><circle cx="32" cy="14" r="5" fill="#C95E55"/></svg>`,
+  teddy: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="18" cy="16" r="8" fill="#C99B6A"/><circle cx="46" cy="16" r="8" fill="#C99B6A"/><ellipse cx="32" cy="47" rx="18" ry="14" fill="#C99B6A"/><circle cx="32" cy="28" r="16" fill="#C99B6A"/><ellipse cx="32" cy="33" rx="7" ry="5" fill="#EBD3B0"/><circle cx="26" cy="25" r="2.4" fill="#36424A"/><circle cx="38" cy="25" r="2.4" fill="#36424A"/><circle cx="32" cy="31" r="2.2" fill="#36424A"/></svg>`,
+  juice: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M38 4l-4 30" stroke="#F28B82" stroke-width="3.5" stroke-linecap="round"/><path d="M16 14h32l-4 42a4 4 0 0 1-4 4H24a4 4 0 0 1-4-4z" fill="#FFFDF7" stroke="#F4AE62" stroke-width="3"/><path d="M19 28h26l-3 28a2 2 0 0 1-2 2H24a2 2 0 0 1-2-2z" fill="#F4AE62"/><circle cx="47" cy="15" r="7" fill="#F2D46B" stroke="#E0B84A" stroke-width="2"/></svg>`,
+  banana: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M14 16 C14 44 34 56 54 46 C56 44 54 40 50 41 C34 46 22 36 22 16 Z" fill="#F2D46B" stroke="#C99B2E" stroke-width="3" stroke-linejoin="round"/><path d="M16 16l-1-8" stroke="#8A6A4A" stroke-width="4" stroke-linecap="round"/></svg>`,
+  ticket: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M6 18h52v10a5 5 0 0 0 0 10v10H6V38a5 5 0 0 0 0-10z" fill="#FBE5A0" stroke="#E0B84A" stroke-width="3"/><path d="M42 18v30" stroke="#E0B84A" stroke-width="2.5" stroke-dasharray="3 4"/><path d="M14 28h20M14 36h14" stroke="#F28B82" stroke-width="4" stroke-linecap="round"/></svg>`,
+  beach: `<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="4" y="40" width="56" height="18" rx="4" fill="#5DB7C9"/><path d="M4 46 q14-8 28 0 t28 0V58H4z" fill="#F7E3A8"/><path d="M30 12v34" stroke="#8A6A4A" stroke-width="3"/><path d="M8 24 Q30 2 52 24Z" fill="#F28B82"/><circle cx="53" cy="10" r="5" fill="#F2D46B"/></svg>`,
+  mountain: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M4 54 L24 16 L36 36 L44 26 L60 54Z" fill="#7DB98A" stroke="#4E8A60" stroke-width="3" stroke-linejoin="round"/><path d="M18 28 L24 16 L30 27 L26 25 L22 29Z" fill="#FFFDF7"/></svg>`,
+  zoo: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="25" fill="#F4AE62"/><circle cx="32" cy="34" r="16" fill="#F6C38E"/><circle cx="26" cy="31" r="2.4" fill="#36424A"/><circle cx="38" cy="31" r="2.4" fill="#36424A"/><path d="M29 37h6l-3 3z" fill="#36424A"/><path d="M28 43 q4 3 8 0" stroke="#36424A" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
   star: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6l7.6 16.5 18 2-13.4 12.3 3.7 17.8L32 45.5l-15.9 9.1 3.7-17.8L6.4 24.5l18-2z" fill="#F28B82"/></svg>`,
   ribbon: `<svg viewBox="0 0 40 30" aria-hidden="true"><path d="M8 0l-6 28 9-5 5 7 4-30z" fill="#5DB7C9"/><path d="M32 0l6 28-9-5-5 7-4-30z" fill="#5E9E6E"/></svg>`
 };
+const appleDot = (x, y) => `<circle cx="${x}" cy="${y}" r="10" fill="#E8766C" stroke="#C95E55" stroke-width="2"/><path d="M${x} ${y - 10}q3-6 8-5" stroke="#5E9E6E" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+ICONS.n1 = `<svg viewBox="0 0 64 64" aria-hidden="true">${appleDot(32, 36)}</svg>`;
+ICONS.n2 = `<svg viewBox="0 0 64 64" aria-hidden="true">${appleDot(20, 36)}${appleDot(44, 36)}</svg>`;
+ICONS.n3 = `<svg viewBox="0 0 64 64" aria-hidden="true">${appleDot(18, 44)}${appleDot(46, 44)}${appleDot(32, 22)}</svg>`;
 function shardSvg(color, empty) {
   return `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3l14 12-5 28H15L10 15z" fill="${empty ? "#E9E4D6" : color}" stroke="${empty ? "#D2CBB8" : "#FFFDF7"}" stroke-width="3" stroke-linejoin="round"/>${empty ? "" : '<path d="M17 16l7-6 6 5" stroke="#FFFDF7" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".7"/>'}</svg>`;
 }
@@ -807,7 +846,8 @@ function renderMap() {
   const done = LEVELS.filter((l) => P.shards.includes(l.id)).length;
   const fresh = LEVELS.filter((l) => isOpen(l) && !P.explored.includes(l.id)).map((l) => `<b>${l.zh}</b>`);
   $("#mapHint").innerHTML = (done ? `彩虹已經恢復 ${done} 道顏色。` : "") +
-    (fresh.length ? `點${fresh.join("或")}開始冒險。` : "去過的地方都可以再玩一次。") + "標著「下次冒險」的地方可以先看故事預告。";
+    (fresh.length ? `點${fresh.join("、")}開始冒險。` : "去過的地方都可以再玩一次，也可以試試挑戰模式。") +
+    (LEVELS.some((l) => l.status !== "playable") ? "標著「下次冒險」的地方可以先看故事預告。" : "");
 }
 function onSpot(id) {
   const l = levelById(id); if (!l) return;
@@ -874,6 +914,50 @@ const HOSTS = {
     <ellipse class="mouth-talk" cx="0" cy="-90" rx="6" ry="5.5" fill="#C95E55"/>
 `
 };
+function animal(o) {
+  const ink = "#36424A";
+  return `${o.back || ""}${o.ears}
+    <ellipse cx="-22" cy="-4" rx="20" ry="9" fill="${o.foot || o.fur}" stroke="${ink}" stroke-width="3"/>
+    <ellipse cx="22" cy="-4" rx="20" ry="9" fill="${o.foot || o.fur}" stroke="${ink}" stroke-width="3"/>
+    <ellipse cx="0" cy="-48" rx="48" ry="50" fill="${o.fur}" stroke="${ink}" stroke-width="3"/>
+    <ellipse cx="0" cy="-40" rx="30" ry="32" fill="${o.belly}"/>${o.body || ""}
+    <ellipse cx="-46" cy="-46" rx="11" ry="24" fill="${o.fur}" stroke="${ink}" stroke-width="3" transform="rotate(14 -46 -46)"/>
+    <g class="arm-r"><ellipse cx="46" cy="-44" rx="11" ry="24" fill="${o.fur}" stroke="${ink}" stroke-width="3"/></g>
+    <circle cx="0" cy="-112" r="46" fill="${o.fur}" stroke="${ink}" stroke-width="3"/>${o.face || ""}
+    <circle cx="-16" cy="-118" r="5.5" fill="${ink}"/><circle cx="16" cy="-118" r="5.5" fill="${ink}"/>
+    <circle cx="-14" cy="-120" r="1.8" fill="#FFFDF7"/><circle cx="18" cy="-120" r="1.8" fill="#FFFDF7"/>
+    <circle cx="-29" cy="-100" r="8" fill="#F28B82" opacity=".45"/><circle cx="29" cy="-100" r="8" fill="#F28B82" opacity=".45"/>
+    ${o.nose || ""}
+    ${o.mouth || `<path class="mouth-smile" d="M-9 -94 Q0 -86 9 -94" stroke="${ink}" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse class="mouth-talk" cx="0" cy="-91" rx="6" ry="5.5" fill="#C95E55"/>`}
+    ${o.top || ""}`;
+}
+HOSTS.kitty = animal({
+  fur: "#F6C38E", belly: "#FFF3D6",
+  ears: `<path d="M-42 -136 L-36 -178 L-8 -152 Z" fill="#F6C38E" stroke="#36424A" stroke-width="3" stroke-linejoin="round"/><path d="M-36 -142 L-33 -166 L-18 -152 Z" fill="#F7B9B2"/>
+    <g class="ear-r"><path d="M42 -136 L36 -178 L8 -152 Z" fill="#F6C38E" stroke="#36424A" stroke-width="3" stroke-linejoin="round"/><path d="M36 -142 L33 -166 L18 -152 Z" fill="#F7B9B2"/></g>`,
+  back: `<path d="M38 -20 C80 -24 86 -80 64 -96" stroke="#36424A" stroke-width="18" fill="none" stroke-linecap="round"/><path d="M38 -20 C80 -24 86 -80 64 -96" stroke="#F6C38E" stroke-width="12" fill="none" stroke-linecap="round"/>`,
+  face: `<path d="M-8 -152v10M0 -154v12M8 -152v10" stroke="#D9965A" stroke-width="3.5" stroke-linecap="round"/>`,
+  nose: `<path d="M-5 -107h10l-5 6z" fill="#E8766C"/><path d="M-14 -102 h-22M-14 -97 l-20 4M14 -102 h22M14 -97 l20 4" stroke="#36424A" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>`,
+  top: `<g class="hat-on"><path d="M-30 -148 Q6 -196 42 -148Z" fill="#F28B82" stroke="#C95E55" stroke-width="3"/><ellipse cx="6" cy="-148" rx="38" ry="9" fill="#F28B82" stroke="#C95E55" stroke-width="3"/><circle cx="6" cy="-178" r="6" fill="#C95E55"/></g>`
+});
+HOSTS.squirrel = animal({
+  fur: "#C98A5A", belly: "#FFF3D6", foot: "#B57748",
+  back: `<path d="M26 -30 C96 -30 112 -130 66 -160 C40 -176 18 -150 44 -136 C78 -112 66 -64 18 -50 Z" fill="#B97A4A" stroke="#36424A" stroke-width="3"/><path d="M58 -140 C80 -120 84 -86 60 -62" stroke="#E0B57C" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"/>`,
+  ears: `<ellipse cx="-30" cy="-152" rx="11" ry="17" fill="#C98A5A" stroke="#36424A" stroke-width="3"/><path d="M-32 -168 l-4 -10 l8 6z" fill="#8A5A36"/>
+    <g class="ear-r"><ellipse cx="30" cy="-152" rx="11" ry="17" fill="#C98A5A" stroke="#36424A" stroke-width="3"/><path d="M32 -168 l4 -10 l-8 6z" fill="#8A5A36"/></g>`,
+  body: `<path d="M-28 -78 h56 v46 q-28 14 -56 0 z" fill="#7DB98A" stroke="#36424A" stroke-width="2.5"/><path d="M-28 -78 l-10 -10 M28 -78 l10 -10" stroke="#7DB98A" stroke-width="5" stroke-linecap="round"/><rect x="-10" y="-62" width="20" height="14" rx="3" fill="#5E9E6E"/>`,
+  face: `<ellipse cx="0" cy="-98" rx="20" ry="14" fill="#F1D9B5"/>`,
+  nose: `<ellipse cx="0" cy="-104" rx="5" ry="3.8" fill="#6B4A3A"/><rect x="-4" y="-88" width="8" height="7" rx="1.5" fill="#FFFDF7" stroke="#36424A" stroke-width="1.5"/>`
+});
+HOSTS.elephant = animal({
+  fur: "#A9B8C6", belly: "#D6DFE6", foot: "#97A7B6",
+  ears: `<ellipse cx="-50" cy="-112" rx="30" ry="36" fill="#A9B8C6" stroke="#36424A" stroke-width="3"/><ellipse cx="-50" cy="-112" rx="18" ry="24" fill="#F7B9B2" opacity=".7"/>
+    <g class="ear-r"><ellipse cx="50" cy="-112" rx="30" ry="36" fill="#A9B8C6" stroke="#36424A" stroke-width="3"/><ellipse cx="50" cy="-112" rx="18" ry="24" fill="#F7B9B2" opacity=".7"/></g>`,
+  body: `<path d="M-14 -96 l14 16 14 -16" fill="none"/><path d="M-20 -88 L0 -72 L20 -88 Z" fill="#F28B82"/>`,
+  nose: `<path d="M-9 -110 Q-12 -84 -4 -72 Q4 -62 16 -68 Q10 -72 7 -78 Q4 -94 9 -110 Z" fill="#A9B8C6" stroke="#36424A" stroke-width="3" stroke-linejoin="round"/>`,
+  mouth: `<path class="mouth-smile" d="M-30 -96 Q-23 -89 -16 -96" stroke="#36424A" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse class="mouth-talk" cx="-23" cy="-93" rx="5" ry="4.5" fill="#C95E55"/>`,
+  top: `<path d="M-36 -146 Q0 -184 36 -146 Z" fill="#2E5E86" stroke="#36424A" stroke-width="3"/><rect x="-40" y="-150" width="80" height="11" rx="4" fill="#2E5E86" stroke="#36424A" stroke-width="2.5"/><rect x="-40" y="-150" width="80" height="4" fill="#F28B82"/><circle cx="0" cy="-164" r="6" fill="#F2D46B"/><path d="M-6 -139 q-26 2 -34 10" stroke="#2E5E86" stroke-width="6" fill="none" stroke-linecap="round"/>`
+});
 function hostSvg(host, x, y) {
   return `<g transform="translate(${x} ${y})"><g id="host" class="b-bob${host.start ? " " + host.start : ""}" data-talk="${host.id}">
   ${HOSTS[host.id] || HOSTS.bunny}
@@ -888,6 +972,10 @@ function hostSvg(host, x, y) {
       <g transform="translate(12 52) scale(.9)">${ICONS.ribbon.replace(/<\/?svg[^>]*>/g, "")}</g>
     </g>
     <g class="held held-apple" transform="translate(78 -112)"><g transform="scale(.8)">${strip(ICONS.apple)}</g></g>
+    <g class="held held-cookie" transform="translate(74 -126)"><rect x="0" y="16" width="52" height="56" rx="14" fill="#CDEDF2" stroke="#5DB7C9" stroke-width="3" opacity=".9"/><rect x="6" y="8" width="40" height="12" rx="4" fill="#F28B82"/><g transform="translate(6 30) scale(.62)">${strip(ICONS.cookie)}</g></g>
+    <g class="held held-ticket" transform="translate(74 -110)"><g transform="scale(.9)">${strip(ICONS.ticket)}</g></g>
+    <g class="held held-basket" transform="translate(70 -110)"><path d="M8 20 Q38 -14 68 20" stroke="#A87C52" stroke-width="5" fill="none"/><g transform="translate(10 -2) scale(.4)">${strip(ICONS.juice)}</g><g transform="translate(36 2) scale(.38)">${strip(ICONS.banana)}</g><path d="M0 20 H76 L68 54 H8 Z" fill="#E0B57C" stroke="#A87C52" stroke-width="3"/><path d="M8 32H70M10 43H66" stroke="#A87C52" stroke-width="2.5"/></g>
+    <g class="notes" transform="translate(52 -198)"><path d="M0 0v-22l14-4v20" stroke="#5E9E6E" stroke-width="3" fill="none"/><circle cx="-3" cy="0" r="5" fill="#5E9E6E"/><circle cx="11" cy="-6" r="5" fill="#5E9E6E"/><path d="M30 -20v-16" stroke="#F28B82" stroke-width="3"/><circle cx="27" cy="-20" r="5" fill="#F28B82"/></g>
   </g></g>
   <g transform="translate(${x} ${y - 206})"><g id="hearts" class="hearts">
     <path d="M0 8 C-14 -6 -26 4 -12 18 L0 28 L12 18 C26 4 14 -6 0 8 Z" fill="#F28B82"/>
@@ -986,15 +1074,126 @@ const SCENES = {
   ${flowers}`;
   }
 };
+const mouseSvg = `<g id="mouseChar" class="critter" data-talk="mouse">
+    <path d="M14 -4 q18 2 20 -12" stroke="#B9C2C6" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="0" cy="-10" rx="16" ry="12" fill="#C9D1D6" stroke="#36424A" stroke-width="2.5"/>
+    <circle cx="-9" cy="-24" r="8" fill="#C9D1D6" stroke="#36424A" stroke-width="2.5"/><circle cx="-9" cy="-24" r="4" fill="#F7B9B2"/>
+    <circle cx="7" cy="-25" r="8" fill="#C9D1D6" stroke="#36424A" stroke-width="2.5"/><circle cx="7" cy="-25" r="4" fill="#F7B9B2"/>
+    <circle cx="-5" cy="-13" r="2.2" fill="#36424A"/><circle cx="5" cy="-13" r="2.2" fill="#36424A"/><circle cx="0" cy="-8" r="2.4" fill="#E8766C"/>
+  </g>`;
+/* item that "pops out" at a spot: drawn at (0,0), moved with style.transform */
+const findItem = (id, icon) => `<g id="item-${id}" class="find-item" style="transform: translate(0px, 0px); transition: transform .9s ease, opacity .4s"><g transform="translate(-22 -36) scale(.7)">${strip(ICONS[icon])}</g></g>`;
+const SPOTS = { box: { x: 520, y: 368 }, bed: { x: 720, y: 330 }, chair: { x: 72, y: 330 } };
+Object.assign(SCENES, {
+  house(level, lit) {
+    return `
+  <defs>${SKY("#BFE6EE", "#FFF8E6")}</defs>
+  <rect width="800" height="480" fill="url(#sky)"/>
+  <g fill="#FFFDF7" opacity=".9"><ellipse cx="320" cy="96" rx="34" ry="11"/><ellipse cx="510" cy="76" rx="30" ry="10"/></g>
+  ${RAINBOW(lit)}
+  <path fill-rule="evenodd" d="M0 0H800V350H0Z M252 42H568V248H252Z" fill="#FFF3DC"/>
+  <g fill="#F7DDB5">${[60, 140, 640, 720].map((x) => [80, 180, 280].map((y) => `<circle cx="${x}" cy="${y}" r="5"/>`).join("")).join("")}</g>
+  <rect x="247" y="37" width="326" height="216" rx="4" fill="none" stroke="#C99B6A" stroke-width="10"/>
+  <path d="M410 42V248" stroke="#C99B6A" stroke-width="5"/>
+  <path d="M232 30 q22 120 0 232 h30 q-14 -112 0 -232z" fill="#F28B82"/><path d="M588 30 q-22 120 0 232 h-30 q14 -112 0 -232z" fill="#F28B82"/>
+  <rect x="636" y="140" width="148" height="10" rx="3" fill="#A87C52"/><path d="M650 150v14M770 150v14" stroke="#A87C52" stroke-width="6"/>
+  <g transform="translate(650 92)"><rect x="0" y="12" width="40" height="38" rx="10" fill="#CDEDF2" stroke="#5DB7C9" stroke-width="3"/><rect x="5" y="5" width="30" height="10" rx="4" fill="#F28B82"/><g transform="translate(6 22) scale(.44)">${strip(ICONS.cookie)}</g></g>
+  <g id="teddyTop" class="fade"><g transform="translate(718 92) scale(.78)">${strip(ICONS.teddy)}</g></g>
+  <rect y="344" width="800" height="8" fill="#C99B6A"/>
+  <rect y="352" width="800" height="128" fill="#E0B57C"/>
+  <path d="M0 392H800M0 436H800" stroke="#C99B6A" stroke-width="2"/>
+  <path d="M590 352v-20a14 14 0 0 1 28 0v20z" fill="#5B4330"/>
+  <g id="mouse" class="pop-item"><g transform="translate(604 354)">${mouseSvg}</g></g>
+  <g transform="translate(656 292)"><rect x="0" y="0" width="14" height="104" rx="4" fill="#C99B6A"/><rect x="6" y="52" width="134" height="30" rx="6" fill="#FFFDF7" stroke="#B9C2C6" stroke-width="3"/><rect x="54" y="46" width="86" height="36" rx="6" fill="#F28B82"/><ellipse cx="34" cy="52" rx="20" ry="10" fill="#CDEDF2" stroke="#B9C2C6" stroke-width="2"/><path d="M16 82v22M132 82v22" stroke="#A87C52" stroke-width="7" stroke-linecap="round"/></g>
+  <g transform="translate(470 342)">
+    <g id="toysBox" class="pop-item"><rect x="14" y="2" width="22" height="22" rx="4" fill="#72B5D8"/><circle cx="58" cy="10" r="11" fill="#7DB98A"/><rect x="70" y="0" width="16" height="22" rx="3" fill="#F2D46B"/></g>
+    <rect x="0" y="20" width="100" height="58" rx="6" fill="#FBE5A0" stroke="#C99B2E" stroke-width="3"/><rect x="-4" y="14" width="108" height="12" rx="4" fill="#F4AE62" stroke="#C99B2E" stroke-width="3"/><path d="M50 26v52" stroke="#C99B2E" stroke-width="3"/>
+  </g>
+  <g transform="translate(36 290)"><rect x="0" y="0" width="12" height="110" rx="4" fill="#A87C52"/><rect x="0" y="4" width="56" height="34" rx="6" fill="#7DB98A"/><rect x="0" y="58" width="72" height="14" rx="4" fill="#C99B6A"/><rect x="60" y="66" width="12" height="44" rx="4" fill="#A87C52"/></g>
+  <g id="toysFloor" class="fade">
+    <rect x="310" y="424" width="26" height="26" rx="4" fill="#72B5D8" transform="rotate(-12 323 437)"/><rect x="344" y="446" width="22" height="22" rx="4" fill="#F2D46B"/>
+    <g transform="translate(392 432)"><rect x="0" y="0" width="46" height="18" rx="6" fill="#F28B82"/><rect x="10" y="-10" width="22" height="12" rx="4" fill="#CDEDF2"/><circle cx="10" cy="20" r="6" fill="#36424A"/><circle cx="36" cy="20" r="6" fill="#36424A"/></g>
+    <circle cx="470" cy="456" r="10" fill="#7DB98A"/>
+  </g>
+  ${findItem("hat", "hat")}${findItem("ball", "ball")}
+  <path class="shard" id="shard" d="M410 100 l20 16 -7 40 h-26 l-7 -40 z" fill="${level.shardColor}" stroke="#FFFDF7" stroke-width="4" stroke-linejoin="round"/>
+  ${hostSvg(level.host, 220, 404)}`;
+  },
+  shop(level, lit) {
+    const stripes = Array.from({ length: 11 }, (_, i) => `<path d="M${340 + i * 40} 150h40v44a20 20 0 0 1-40 0z" fill="${i % 2 ? "#FFF8E6" : "#F28B82"}"/>`).join("");
+    const on = (icon, x, y, sc) => `<g transform="translate(${x} ${y}) scale(${sc})">${strip(ICONS[icon])}</g>`;
+    return `
+  <defs>${SKY("#BFE6EE", "#FFF8E6")}</defs>
+  <rect width="800" height="480" fill="url(#sky)"/>
+  <g fill="#FFFDF7" opacity=".9"><ellipse cx="110" cy="90" rx="44" ry="14"/><ellipse cx="136" cy="80" rx="26" ry="16"/></g>
+  ${RAINBOW(lit)}
+  <path d="M0 310 Q200 270 400 300 T800 290 V480 H0 Z" fill="#A9D4A0"/>
+  <rect y="350" width="800" height="130" fill="#8CC48A"/>
+  <g><circle cx="80" cy="300" r="34" fill="#7DB98A"/><rect x="75" y="320" width="10" height="40" fill="#8A6A4A"/></g>
+  <rect x="352" y="150" width="10" height="230" fill="#A87C52"/><rect x="760" y="150" width="10" height="230" fill="#A87C52"/>
+  <rect x="368" y="214" width="386" height="90" fill="#FFF3DC"/>
+  <path d="M368 252H754" stroke="#E5DCC4" stroke-width="4"/>
+  ${[390, 440, 490, 540, 590, 640, 690].map((x, i) => `<rect x="${x}" y="${i % 2 ? 222 : 226}" width="30" height="${i % 2 ? 28 : 24}" rx="7" fill="${["#F4AE62", "#F2D46B", "#F28B82", "#7DB98A"][i % 4]}" opacity=".8"/>`).join("")}
+  ${on("banana", 700, 252, .6)}${on("apple", 400, 254, .6)}
+  ${stripes}
+  <rect x="510" y="122" width="100" height="34" rx="10" fill="#FFFDF7" stroke="#C99B6A" stroke-width="3"/>${on("apple", 520, 124, .45)}${on("cookie", 552, 126, .42)}${on("juice", 580, 124, .45)}
+  <rect x="350" y="300" width="424" height="16" rx="4" fill="#C99B6A"/>
+  <rect x="360" y="316" width="404" height="70" fill="#E0B57C"/><path d="M460 316v70M560 316v70M660 316v70" stroke="#C99B6A" stroke-width="3"/>
+  ${on("water", 372, 262, .62)}${on("milk", 414, 258, .66)}${on("juice", 460, 258, .66)}
+  <g transform="translate(600 272)"><ellipse cx="30" cy="28" rx="36" ry="8" fill="#FFFDF7"/>${on("cookie", 0, 0, .5)}${on("cookie", 26, 4, .46)}</g>
+  <g transform="translate(680 268)"><path d="M0 14h60l-6 22H6z" fill="#E0B57C" stroke="#A87C52" stroke-width="2.5"/>${on("n3", 0, -16, .9)}</g>
+  <path class="shard" id="shard" d="M556 214 l20 16 -7 40 h-26 l-7 -40 z" fill="${level.shardColor}" stroke="#FFFDF7" stroke-width="4" stroke-linejoin="round"/>
+  ${hostSvg(level.host, 220, 410)}`;
+  },
+  station(level, lit) {
+    const wins = [436, 486, 536, 586].map((x) => `<g class="train-win" transform="translate(${x} 300)"><rect width="40" height="34" rx="6" fill="#CDEDF2" stroke="#2E5E86" stroke-width="3"/><g class="face"></g></g>`).join("");
+    const wheels = [450, 520, 600, 680, 750].map((x) => `<circle cx="${x}" cy="398" r="15" fill="#36424A"/><circle cx="${x}" cy="398" r="5" fill="#B9C2C6"/>`).join("");
+    return `
+  <defs>${SKY("#BFE6EE", "#FFF8E6")}</defs>
+  <rect width="800" height="480" fill="url(#sky)"/>
+  <g fill="#FFFDF7" opacity=".9"><ellipse cx="690" cy="100" rx="44" ry="14"/><ellipse cx="716" cy="90" rx="26" ry="16"/></g>
+  ${RAINBOW(lit)}
+  <path d="M0 300 Q160 250 330 290 T640 270 T800 280 V480 H0 Z" fill="#A9D4A0"/>
+  <rect y="330" width="800" height="150" fill="#8CC48A"/>
+  <rect y="410" width="800" height="10" fill="#A87C52"/><rect y="432" width="800" height="10" fill="#A87C52"/>
+  ${Array.from({ length: 20 }, (_, i) => `<rect x="${i * 42}" y="406" width="16" height="40" rx="3" fill="#8A6A4A"/>`).join("")}
+  <rect y="372" width="400" height="30" fill="#E5DCC4"/><rect y="372" width="400" height="6" fill="#F2D46B"/>
+  <rect x="60" y="160" width="10" height="214" fill="#A87C52"/><rect x="360" y="160" width="10" height="214" fill="#A87C52"/>
+  <path d="M40 166 L215 120 L390 166 Z" fill="#F28B82" stroke="#C95E55" stroke-width="3" stroke-linejoin="round"/>
+  <g transform="translate(330 128)"><circle r="20" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/><path d="M0 -12V0L9 5" stroke="#36424A" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+  <g id="train" style="transform: translateX(0px)">
+    <rect x="420" y="284" width="214" height="98" rx="14" fill="#5DB7C9" stroke="#2E7C90" stroke-width="3"/>
+    <rect x="420" y="350" width="214" height="10" fill="#FFF8E6"/>
+    ${wins}
+    <rect x="634" y="360" width="16" height="10" fill="#36424A"/>
+    <rect x="650" y="300" width="132" height="82" rx="12" fill="#F28B82" stroke="#C95E55" stroke-width="3"/>
+    <rect x="650" y="256" width="66" height="60" rx="8" fill="#F28B82" stroke="#C95E55" stroke-width="3"/>
+    <rect x="662" y="268" width="40" height="30" rx="6" fill="#CDEDF2" stroke="#C95E55" stroke-width="3"/>
+    <rect x="642" y="248" width="82" height="12" rx="4" fill="#C95E55"/>
+    <rect x="740" y="262" width="22" height="40" rx="4" fill="#36424A"/>
+    <g class="puffs"><circle class="puff" cx="751" cy="246" r="12" fill="#FFFDF7"/><circle class="puff" cx="751" cy="246" r="14" fill="#FFFDF7"/><circle class="puff" cx="751" cy="246" r="10" fill="#FFFDF7"/></g>
+    <circle cx="748" cy="340" r="22" fill="#FFFDF7" stroke="#C95E55" stroke-width="3"/>
+    <g id="signIcon" transform="translate(732 324) scale(.5)">${strip(ICONS.star)}</g>
+    ${wheels}
+  </g>
+  <path class="shard" id="shard" d="M560 186 l20 16 -7 40 h-26 l-7 -40 z" fill="${level.shardColor}" stroke="#FFFDF7" stroke-width="4" stroke-linejoin="round"/>
+  ${hostSvg(level.host, 210, 396)}`;
+  }
+});
 function buildScene(level) {
   const lit = S.progress.shards.filter((id) => id !== level.id);
   const make = SCENES[level.scene] || SCENES.dock;
   $("#scene").innerHTML = make(level, lit);
   $("#tray").innerHTML = "";
 }
+function runFx(name, who, pick, st, t) {
+  const parts = String(name).split(":"), fn = parts[0], arg = parts[1];
+  if (fn === "show" || fn === "hide") { const el = document.getElementById(arg); el && el.classList.add(fn === "show" ? "in" : "out"); return; }
+  FEEDBACK[fn] && FEEDBACK[fn](who, pick, st, t, arg);
+}
 function setPose(p) {
   const b = $("#host"); if (!b) return;
-  b.classList.remove("pose-wave", "pose-give", "pose-drinks", "pose-apple", "pose-listen");
+  Array.from(b.classList).filter((c) => c.indexOf("pose-") === 0).forEach((c) => b.classList.remove(c));
   if (p && p !== "idle") { void b.getBBox(); b.classList.add("pose-" + p); }
 }
 function setTalking(on, key) {
@@ -1060,6 +1259,60 @@ const FEEDBACK = {
     }
   },
   bloomAll() { let guard = 20; while ($("#scene .flower:not(.bloom)") && guard--) FEEDBACK.bloom("chloe"); },
+  hopHost() { hop(); },
+  giveToken(who, pick, st, t, arg) {
+    if (pick === "no") return;
+    const icon = arg || pick || (st && st.defaultCue) || "star";
+    (who === "both" ? ["chloe", "joey"] : [who]).forEach((id) => {
+      if (!D.players[id]) return;
+      const key = `tok-${st ? st.id : "x"}-${id}`;
+      const old = document.getElementById(key); old && old.remove();
+      const el = document.createElement("div");
+      el.className = "token " + id; el.id = key;
+      el.innerHTML = (ICONS[icon] || ICONS.star) + `<span class="tname">${D.players[id].name}</span>`;
+      $("#tray").appendChild(el);
+    });
+  },
+  glowTokens() { $$("#tray .token").forEach((b) => { b.classList.remove("gifted"); void b.offsetWidth; b.classList.add("gifted"); }); },
+  /* ---- house ---- */
+  find(who, pick, st, t) {
+    const list = (st && st.finds) || ["hat"];
+    const item = list[t && t.sub < list.length ? t.sub : 0];
+    const spot = SPOTS[pick] || SPOTS[(st && st.defaultCue) || "box"];
+    const g = $("#item-" + item); if (!g) return;
+    g.style.transition = "none";
+    g.style.transform = `translate(${spot.x}px, ${spot.y}px)`;
+    void g.getBBox();
+    g.style.transition = "transform .9s ease, opacity .4s";
+    g.classList.add("in");
+    setTimeout(() => {
+      if (!$("#item-" + item)) return;
+      if (item === "hat") {
+        g.style.transform = "translate(226px, 252px)";
+        setTimeout(() => { g.classList.remove("in"); const h = $("#host"); h && h.classList.add("has-hat"); hop(); }, 900);
+      } else {
+        g.style.transform = "translate(310px, 412px)";
+      }
+    }, 1000);
+  },
+  /* ---- shop ---- */
+  busy() { const h = $("#host"); h && h.classList.add("busy"); },
+  attention() { const h = $("#host"); h && h.classList.remove("busy"); setPose("wave"); hop(); },
+  /* ---- station ---- */
+  trainSign(who, pick, st) {
+    const g = $("#signIcon"); if (!g) return;
+    g.innerHTML = strip(ICONS[pick || (st && st.defaultCue) || "star"]);
+    FEEDBACK.giveToken(who, pick, st);
+  },
+  windowFace(who, pick) {
+    (who === "both" ? ["chloe", "joey"] : [who]).forEach(() => {
+      const w = $("#scene .train-win:not(.in)"); if (!w) return;
+      w.querySelector(".face").innerHTML = `<g transform="translate(4 1) scale(.5)">${strip(ICONS[pick] || ICONS.happy)}</g>`;
+      w.classList.add("in");
+    });
+  },
+  trainGo() { const tr = $("#train"); if (!tr) return; tr.classList.add("go"); tr.style.transform = "translateX(36px)"; setPose("wave"); },
+  trainAway() { const tr = $("#train"); if (!tr) return; tr.classList.add("go"); tr.style.transform = "translateX(560px)"; },
   /* ---- forest ---- */
   shareApple(who, pick) {
     const h = $("#host"); h && h.classList.remove("tired");
@@ -1096,7 +1349,8 @@ const FEEDBACK = {
 /* ================= play engine ================= */
 let run = null;
 function buildQueue(level, players, challenge) {
-  const q = []; let alt = 0;
+  // single-speaker ("alternate") turns start with a different sister on each level
+  const q = []; let alt = Math.max(0, LEVELS.indexOf(level));
   activeSteps(level, challenge).forEach((st) => {
     if (players.length === 1) { q.push({ step: st, who: players[0], sub: 0 }); return; }
     const c = st.coop || "each";
@@ -1187,7 +1441,7 @@ function nextTurn() {
   const st = t.step;
   $("#turnChip").innerHTML = run.players.length > 1 ? turnChipFor(t.who) : turnChipFor(t.who).replace("輪到 ", "") ;
   setPose(st.pose);
-  [].concat(st.enter || []).forEach((n) => FEEDBACK[n] && FEEDBACK[n](t.who, null, st));
+  [].concat(st.enter || []).forEach((n) => runFx(n, t.who, null, st, t));
   // cues
   const cues = $("#cues");
   if (st.cues) {
@@ -1243,7 +1497,7 @@ async function doContinue() {
   const pick = run.pick || st.defaultCue || null;
   setControls("feedback");
   $("#cues").hidden = true;
-  [].concat(st.feedback || []).forEach((n) => FEEDBACK[n] && FEEDBACK[n](t.who, pick, st));
+  [].concat(st.feedback || []).forEach((n) => runFx(n, t.who, pick, st, t));
   chime("ok");
   renderFootsteps();
   const resp = fillLines(st.responses[run.pick] || st.responses.default || [], t.who);
@@ -1268,7 +1522,7 @@ async function finishLevel() {
   // scene: rainbow stripe, door opens, shard
   const stripe = $(`#rainbow [data-level="${level.id}"]`);
   if (stripe) { stripe.setAttribute("stroke", level.shardColor); stripe.classList.add("lit"); }
-  [].concat(level.ending.feedback || []).forEach((n) => FEEDBACK[n] && FEEDBACK[n]("both"));
+  [].concat(level.ending.feedback || []).forEach((n) => runFx(n, "both"));
   const sh = $("#shard"); sh && sh.classList.add("show");
   if (P.wish === level.id) { P.wish = null; save(); }
   setPose("wave"); hop();
@@ -1283,7 +1537,9 @@ async function finishLevel() {
 function showDone(already) {
   const level = run.level;
   $("#doneShards").innerHTML = LEVELS.map((l) => shardSvg(l.shardColor, !S.progress.shards.includes(l.id))).join("");
-  $("#doneText").textContent = level.ending.zh;
+  const all = LEVELS.every((l) => S.progress.shards.includes(l.id));
+  $("#doneH").textContent = all ? "彩虹全部回來了！" : "找到彩虹碎片了！";
+  $("#doneText").textContent = level.ending.zh + (all ? ` ${LEVELS.length} 道顏色全部回來了，謝謝 Chloe 和 Joey！每個地方都可以再玩、換人玩，或試試挑戰模式。` : "");
   $("#doneReplay").hidden = !already;
   $("#doneChoices").innerHTML = level.ending.nextChoices.map((id) => {
     const l = levelById(id);

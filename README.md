@@ -9,7 +9,7 @@
 ## 第一版內容
 
 - 首頁選擇「Chloe 玩」「Joey 玩」「姊妹一起玩」。
-- 小島地圖：五個地點。**迎賓碼頭**和**心情森林**可以完整遊玩（森林在完成碼頭後打開）；家庭小屋、野餐商店、旅行車站是「下次冒險」故事預告，不能遊玩。
+- 小島地圖：五個地點都可以完整遊玩。先玩**迎賓碼頭**，完成後心情森林、家庭小屋、野餐商店、旅行車站一起打開，順序隨孩子選。五塊碎片都找到時，彩虹全部恢復。
 - 迎賓碼頭四組對話：認識朋友 → 今天的心情 → 準備飲料 → 道謝。
   - 單人：4 段；姊妹一起玩：前三組兩人輪流各一次，最後一起說 Thank you（共 7 段）。
 - 每段：小兔子說話 → 孩子回應 → 視需要提示 → 家長按「繼續冒險」→ 場景回饋（徽章、心情貼紙、野餐籃、緞帶）→「下一段」。
@@ -33,6 +33,18 @@
 | 挑戰：問小熊心情 | Your turn! Ask me. | How are you, Bear? | 複習 |
 | 挑戰：關心小鳥 | （小鳥）I'm sad. | Are you okay?／Oh no! | **新：Are you okay?** |
 | 挑戰：道別 | Bye, Chloe! | Bye, Bear! Bye, Bird! | 複習 |
+
+### 家庭小屋（第 3 週）
+
+小貓 Kitty 的帽子和球不見了。新句子：**Here it is!**、**Yes, please!**；挑戰：反過來問小老鼠 **What's your name?**、**Help, please!**、Bye, Kitty!
+
+### 野餐商店（第 4 週）
+
+松鼠幫大家裝野餐籃。新單字：**juice**、**banana**；複習 please / thank you；挑戰：**Excuse me!**、**How many?**（數蘋果）、Bye, Squirrel!
+
+### 旅行車站（第 5 週）
+
+小象站長 Ellie 和彩虹列車。新句子：**One ticket, please.**、**Let's go!**；複習名字、心情（表情會出現在火車窗戶）；挑戰：年紀、**Where to?**（海邊／山上／動物園）、Bye, Ellie!
 
 完成任一關後，可以讓孩子選下次想去的地方；如果那裡已經打開，會出現「現在去…」按鈕。
 
@@ -71,6 +83,6 @@
 3. 只在挑戰模式出現的對話，加上 `challengeOnly: true` 即可。
 4. 每個 step 包含：角色台詞 `lines`、`helper` 小幫手、`zhTip` 中文提示、`answers` 參考回答、可選的 `cues` 圖片提示、`responses` 角色回應、`feedback` 場景回饋，以及姊妹輪流方式 `coop`（`each` / `alternate` / `together`）。
 
-`index.html` 裡的 `FEEDBACK` 物件放場景動畫（例如 `badgeName`、`basket`、`bloom`、`shareApple`、`birdHappy`），`SCENES` 放各地點的場景圖（目前有 `dock`、`forest`），`HOSTS` 放主角畫法（`bunny`、`bear`）。新地點要做成可玩時，需要在 `SCENES` 畫一張場景；動作和角色能沿用就沿用，在資料裡引用它們的名字即可。
+`index.html` 裡的 `FEEDBACK` 物件放場景動畫（例如 `badgeName`、`basket`、`bloom`、`shareApple`、`birdHappy`），`SCENES` 放各地點的場景圖（`dock`、`forest`、`house`、`shop`、`station`），`HOSTS` 放主角畫法（`bunny`、`bear`、`kitty`、`squirrel`、`elephant`）。資料裡也可以直接寫 `show:元素id`／`hide:元素id` 讓場景裡的東西出現或消失，`giveToken:圖示` 把小獎品放進孩子的收集欄。新地點要做成可玩時，需要在 `SCENES` 畫一張場景；動作和角色能沿用就沿用，在資料裡引用它們的名字即可。
 
 建議每週：重複少量舊句型，加入少量新表達；3～5 組對話，約 5 分鐘，一次一題。
