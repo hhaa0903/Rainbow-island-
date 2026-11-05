@@ -48,6 +48,11 @@
 
 完成任一關後，可以讓孩子選下次想去的地方；如果那裡已經打開，會出現「現在去…」按鈕。
 
+### 多練口說
+
+- **換你當角色**（開場卡片、家長面板或完成畫面的「換你當 ○○」）：孩子當小兔子、小熊、小貓、松鼠或站長，主動開口問問題或打招呼（What's your name? / How are you? / Water or milk? / Ticket? …），角色會回答，場景也會跟著變化。每關 4 組；姊妹一起玩時兩人都輪到，約 5 分鐘。較多提示時，會先播一次要說的句子讓孩子跟著說。
+- **說長一點**：每一段在「英文小幫手」旁邊。孩子說了一個字（例如 Happy.）後按下，會播完整句（I'm happy.）讓孩子再跟著說一次。有圖片的題目，會播孩子選的那一句。
+
 ## 操作說明
 
 | 按鈕 | 用途 |
@@ -81,6 +86,7 @@
 1. 找到地點（例如 `forest`），把 `status` 從 `"preview"` 改成 `"playable"`。
 2. 照「迎賓碼頭」的格式補上 `host`、`intro`、`steps`、`ending`。
 3. 只在挑戰模式出現的對話，加上 `challengeOnly: true` 即可。
+   「換你當角色」用的句子寫在 step 的 `roleplay`（孩子說 `say`、角色回答 `reply`）。
 4. 每個 step 包含：角色台詞 `lines`、`helper` 小幫手、`zhTip` 中文提示、`answers` 參考回答、可選的 `cues` 圖片提示、`responses` 角色回應、`feedback` 場景回饋，以及姊妹輪流方式 `coop`（`each` / `alternate` / `together`）。
 
 `index.html` 裡的 `FEEDBACK` 物件放場景動畫（例如 `badgeName`、`basket`、`bloom`、`shareApple`、`birdHappy`），`SCENES` 放各地點的場景圖（`dock`、`forest`、`house`、`shop`、`station`），`HOSTS` 放主角畫法（`bunny`、`bear`、`kitty`、`squirrel`、`elephant`）。資料裡也可以直接寫 `show:元素id`／`hide:元素id` 讓場景裡的東西出現或消失，`giveToken:圖示` 把小獎品放進孩子的收集欄。新地點要做成可玩時，需要在 `SCENES` 畫一張場景；動作和角色能沿用就沿用，在資料裡引用它們的名字即可。

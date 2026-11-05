@@ -31,6 +31,8 @@
  *   cues        理解提示圖片（不是選擇題）：id、圖示 icon、keywords（麥克風比對用）
  *   responses   角色的回應；可依孩子選的 cue id 分開寫，default 為沒有選圖時
  *   enter       （可省略）這段開始時的動畫，例如 birdPeek
+ *   roleplay    「換你當角色」模式用：孩子要說的 say（+ zh），角色回答 reply（+ replyZh），
+ *               可加 speaker（由其他角色回答）、feedback、pick（回饋動畫用的選項）
  *   feedback    場景回饋動畫代號，可以是一個或陣列（遊戲引擎裡的 FEEDBACK 函式）
  *
  * 文字中的 {name} 會換成正在回答的孩子名字（一起說時為 "Chloe and Joey"），
@@ -63,6 +65,7 @@ window.RAINBOW_DATA = {
       steps: [
         {
           id: "meet",
+          roleplay: { say: "What's your name?", zh: "你叫什麼名字？", reply: "I'm Bunny!", replyZh: "我是小兔子！" },
           title: "認識朋友",
           coop: "each",
           pose: "wave",
@@ -96,6 +99,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "mood",
+          roleplay: { say: "How are you?", zh: "你好嗎？", reply: "I'm happy!", replyZh: "我很開心！" },
           title: "帶著今天的心情出發",
           coop: "each",
           pose: "idle",
@@ -146,6 +150,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "drink",
+          roleplay: { say: "Water or milk?", zh: "要水還是牛奶？", reply: "Milk, please!", replyZh: "請給我牛奶！", feedback: ["basket"], pick: "milk" },
           title: "準備船上的飲料",
           coop: "each",
           pose: "drinks",
@@ -168,6 +173,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "thanks",
+          roleplay: { say: "This is for you!", zh: "這是給你的！", reply: "Thank you!", replyZh: "謝謝！" },
           title: "向朋友道謝",
           coop: "together",
           pose: "give",
@@ -234,6 +240,7 @@ window.RAINBOW_DATA = {
       steps: [
         {
           id: "meetBear",
+          roleplay: { say: "Hi! I'm {name}.", zh: "嗨！我是{name}。", reply: "Hi! I'm Bear!", replyZh: "嗨！我是小熊！" },
           title: "認識小熊",
           coop: "each",
           pose: "wave",
@@ -248,6 +255,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "tired",
+          roleplay: { say: "How are you?", zh: "你好嗎？", reply: "I'm tired.", replyZh: "我好累。" },
           title: "小熊好累",
           coop: "each",
           pose: "idle",
@@ -300,6 +308,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "apple",
+          roleplay: { say: "I like apples!", zh: "我喜歡蘋果！", reply: "Me too!", replyZh: "我也是！", feedback: ["shareApple"], pick: "yes" },
           title: "分享蘋果",
           coop: "each",
           pose: "apple",
@@ -337,6 +346,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "hiBird",
+          roleplay: { say: "Hi, Bird! How are you?", zh: "嗨，小鳥！你好嗎？", reply: "I'm happy now!", replyZh: "我現在好開心！", speaker: "bird", feedback: ["birdHappy"] },
           title: "跟小鳥做朋友",
           coop: "together",
           pose: "idle",
@@ -407,6 +417,7 @@ window.RAINBOW_DATA = {
       steps: [
         {
           id: "meetKitty",
+          roleplay: { say: "What's your name?", zh: "你叫什麼名字？", reply: "I'm Kitty!", replyZh: "我是小貓！" },
           title: "認識小貓",
           coop: "each",
           pose: "wave",
@@ -444,6 +455,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "find",
+          roleplay: { say: "Where is my hat?", zh: "我的帽子在哪裡？", reply: "Here it is!", replyZh: "在這裡！" },
           title: "找帽子和球",
           coop: "each",
           pose: "idle",
@@ -467,6 +479,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "tidy",
+          roleplay: { say: "Can you help me?", zh: "你可以幫我嗎？", reply: "Yes!", replyZh: "好！", feedback: ["hide:toysFloor", "show:toysBox", "hostHappy"] },
           title: "一起收玩具",
           coop: "together",
           pose: "wave",
@@ -498,6 +511,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "cookie",
+          roleplay: { say: "Cookie?", zh: "要吃餅乾嗎？", reply: "Yes, please!", replyZh: "好，麻煩你！" },
           title: "吃小餅乾",
           coop: "each",
           pose: "cookie",
@@ -581,6 +595,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "welcome",
+          roleplay: { say: "Hi! Welcome!", zh: "嗨！歡迎光臨！", reply: "Hi!", replyZh: "嗨！" },
           title: "歡迎光臨",
           coop: "each",
           pose: "wave",
@@ -593,6 +608,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "drink",
+          roleplay: { say: "Water, milk, or juice?", zh: "要水、牛奶，還是果汁？", reply: "Juice, please!", replyZh: "請給我果汁！" },
           title: "選飲料",
           coop: "each",
           pose: "idle",
@@ -636,6 +652,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "snack",
+          roleplay: { say: "Cookie or banana?", zh: "要餅乾還是香蕉？", reply: "Banana, please!", replyZh: "請給我香蕉！" },
           title: "選點心",
           coop: "each",
           pose: "idle",
@@ -653,6 +670,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "thanks",
+          roleplay: { say: "Here you go!", zh: "給你！", reply: "Thank you!", replyZh: "謝謝！" },
           title: "拿野餐籃、道謝",
           coop: "together",
           pose: "basket",
@@ -711,6 +729,7 @@ window.RAINBOW_DATA = {
       steps: [
         {
           id: "hello",
+          roleplay: { say: "What's your name?", zh: "你叫什麼名字？", reply: "I'm Ellie!", replyZh: "我是 Ellie！" },
           title: "認識站長",
           coop: "each",
           pose: "wave",
@@ -741,6 +760,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "ticket",
+          roleplay: { say: "Ticket?", zh: "要車票嗎？", reply: "One ticket, please!", replyZh: "請給我一張票！" },
           title: "拿車票",
           coop: "each",
           pose: "ticket",
@@ -781,6 +801,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "mood",
+          roleplay: { say: "How are you today?", zh: "你今天好嗎？", reply: "I'm happy!", replyZh: "我很開心！" },
           title: "出發前的心情",
           coop: "each",
           pose: "idle",
@@ -806,6 +827,7 @@ window.RAINBOW_DATA = {
         },
         {
           id: "go",
+          roleplay: { say: "All aboard!", zh: "大家上車囉！", reply: "Let's go!", replyZh: "出發吧！", feedback: ["trainGo"] },
           title: "一起出發",
           coop: "together",
           pose: "wave",
