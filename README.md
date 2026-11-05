@@ -13,6 +13,11 @@
 - 迎賓碼頭四組對話：認識朋友 → 今天的心情 → 準備飲料 → 道謝。
   - 單人：4 段；姊妹一起玩：前三組兩人輪流各一次，最後一起說 Thank you（共 7 段）。
 - 每段：小兔子說話 → 孩子回應 → 視需要提示 → 家長按「繼續冒險」→ 場景回饋（徽章、心情貼紙、野餐籃、緞帶）→「下一段」。
+- **簡單模式／挑戰模式**：開場卡片或家長面板切換。挑戰模式多 3 組對話：
+  - 幾歲了：How old are you? → Eight.／I'm eight.（Joey：six）
+  - 問小兔子心情：Your turn! Ask me. → How are you, Bunny?（由孩子主動發問，姊妹一起玩時兩人輪流擔任）
+  - 揮手道別：Bye, Chloe! → Bye, Bunny!
+  - 單人 7 段；姊妹一起玩 11 段，約 8 分鐘。
 - 結尾：彩虹恢復第一道顏色、船門打開、得到彩虹碎片；孩子選下次想去心情森林或家庭小屋；可再玩一次或換人玩。
 
 ## 操作說明
@@ -47,7 +52,8 @@
 
 1. 找到地點（例如 `forest`），把 `status` 從 `"preview"` 改成 `"playable"`。
 2. 照「迎賓碼頭」的格式補上 `host`、`intro`、`steps`、`ending`。
-3. 每個 step 包含：角色台詞 `lines`、`helper` 小幫手、`zhTip` 中文提示、`answers` 參考回答、可選的 `cues` 圖片提示、`responses` 角色回應、`feedback` 場景回饋，以及姊妹輪流方式 `coop`（`each` / `alternate` / `together`）。
+3. 只在挑戰模式出現的對話，加上 `challengeOnly: true` 即可。
+4. 每個 step 包含：角色台詞 `lines`、`helper` 小幫手、`zhTip` 中文提示、`answers` 參考回答、可選的 `cues` 圖片提示、`responses` 角色回應、`feedback` 場景回饋，以及姊妹輪流方式 `coop`（`each` / `alternate` / `together`）。
 
 `index.html` 裡的 `FEEDBACK` 物件放場景動畫（`badgeName`、`badgeMood`、`basket`、`giftBadge`）；新場景如果需要新的動作，就在那裡加一個函式，並在資料裡引用它的名字。目前場景圖畫的是碼頭，其他地點要做成可玩時，還需要畫各自的場景。
 

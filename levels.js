@@ -12,7 +12,9 @@
  *                 "each"      兩人輪流各回答一次
  *                 "alternate" 只有一人回答，下一個 alternate 換另一人
  *                 "together"  兩人一起說
- *   pose        角色動作：wave（揮手）/ drinks（拿出飲料）/ give（遞出禮物）/ idle
+ *   pose        角色動作：wave（揮手）/ drinks（拿出飲料）/ give（遞出禮物）/ listen（等孩子問）/ idle
+ *   challengeOnly  true = 只在「挑戰模式」出現
+ *   waitTip     （可省略）家長區等待提示，換掉預設的「先等約 5～10 秒」
  *   lines       角色台詞（英文 en + 中文 zh）。一次只說一兩句。
  *   repeatLines 第二位孩子回答時改用的台詞（可省略）
  *   helper      「英文小幫手」：更簡短的英文示範
@@ -23,12 +25,13 @@
  *   responses   角色的回應；可依孩子選的 cue id 分開寫，default 為沒有選圖時
  *   feedback    場景回饋動畫代號（遊戲引擎裡的 FEEDBACK 函式）
  *
- * 文字中的 {name} 會換成正在回答的孩子名字（一起說時為 "Chloe and Joey"）。
+ * 文字中的 {name} 會換成正在回答的孩子名字（一起說時為 "Chloe and Joey"），
+ * {age} / {Age} 會換成孩子年紀的英文（eight / Eight）。
  */
 window.RAINBOW_DATA = {
   players: {
-    chloe: { id: "chloe", name: "Chloe", zh: "Chloe", age: "8 歲", color: "#E8766C" },
-    joey: { id: "joey", name: "Joey", zh: "Joey", age: "6 歲", color: "#4E9A68" }
+    chloe: { id: "chloe", name: "Chloe", zh: "Chloe", age: "8 歲", ageNum: 8, ageEn: "eight", color: "#E8766C" },
+    joey: { id: "joey", name: "Joey", zh: "Joey", age: "6 歲", ageNum: 6, ageEn: "six", color: "#4E9A68" }
   },
 
   levels: [
@@ -46,7 +49,7 @@ window.RAINBOW_DATA = {
       host: { name: "Bunny", zh: "小兔子" },
       intro: {
         zh: "小兔子 Bunny 的彩虹船準備出發了！牠想認識兩位新朋友。一起打招呼，幫忙準備飲料，就能找到第一塊彩虹碎片。",
-        parentNote: "約 5 分鐘・4 組對話・一次一句"
+        parentNote: "一次一句"
       },
       steps: [
         {
@@ -67,6 +70,20 @@ window.RAINBOW_DATA = {
           listenWords: ["chloe", "joey", "i'm", "name"],
           responses: { default: [{ en: "Hi, {name}!", zh: "嗨，{name}！" }] },
           feedback: "badgeName"
+        },
+        {
+          id: "age",
+          title: "幾歲了（挑戰）",
+          challengeOnly: true,
+          coop: "each",
+          pose: "idle",
+          lines: [{ en: "How old are you?", zh: "你幾歲？" }],
+          helper: { en: "I'm {age}.", zh: "我 {age} 歲。" },
+          zhTip: "孩子可以只說數字，或用手指比出來。",
+          answers: { simple: ["{Age}."], advanced: ["I'm {age}."] },
+          listenWords: ["eight", "six", "8", "6"],
+          responses: { default: [{ en: "Wow, {age}! Cool!", zh: "哇，{age} 歲！好棒！" }] },
+          feedback: "badgeAge"
         },
         {
           id: "mood",
@@ -99,6 +116,26 @@ window.RAINBOW_DATA = {
           feedback: "badgeMood"
         },
         {
+          id: "askBunny",
+          title: "問小兔子心情（挑戰）",
+          challengeOnly: true,
+          coop: "alternate",
+          pose: "listen",
+          lines: [{ en: "Your turn! Ask me.", zh: "換你問我！" }],
+          helper: { en: "How are you, Bunny?", zh: "你好嗎，小兔子？" },
+          zhTip: "這一題換孩子問問題。可以用剛剛小兔子問過的 How are you?",
+          waitTip: "這次換孩子開口問。等一下下，需要時家長可以先小聲示範：How are you, Bunny?",
+          answers: { simple: ["How are you?"], advanced: ["How are you, Bunny?"] },
+          listenWords: ["how", "are", "you", "bunny"],
+          responses: {
+            default: [
+              { en: "I'm happy!", zh: "我很開心！" },
+              { en: "Thank you for asking.", zh: "謝謝你問我。" }
+            ]
+          },
+          feedback: "bunnyHappy"
+        },
+        {
           id: "drink",
           title: "準備船上的飲料",
           coop: "each",
@@ -129,10 +166,25 @@ window.RAINBOW_DATA = {
           helper: { en: "Thank you.", zh: "謝謝。" },
           helperOnRequest: true,
           zhTip: "小兔子把探險徽章遞給孩子。留一點時間，讓孩子自然地說謝謝。",
+          waitTip: "留一點時間，讓孩子自然地說。先等約 5～10 秒，再提供提示。",
           answers: { simple: ["Thank you."], advanced: ["Thank you, Bunny."] },
           listenWords: ["thank", "thanks", "bunny"],
           responses: { default: [{ en: "You're welcome!", zh: "不客氣！" }] },
           feedback: "giftBadge"
+        },
+        {
+          id: "bye",
+          title: "揮手道別（挑戰）",
+          challengeOnly: true,
+          coop: "together",
+          pose: "wave",
+          lines: [{ en: "Bye, {name}!", zh: "掰掰，{name}！" }],
+          helper: { en: "Bye, Bunny!", zh: "掰掰，小兔子！" },
+          zhTip: "跟小兔子揮揮手說再見。只說 Bye 也很好。",
+          answers: { simple: ["Bye!"], advanced: ["Bye, Bunny!"] },
+          listenWords: ["bye", "bunny"],
+          responses: { default: [{ en: "See you next time!", zh: "下次見！" }] },
+          feedback: "waveBye"
         }
       ],
       ending: {
@@ -140,6 +192,8 @@ window.RAINBOW_DATA = {
           { en: "Yay! The rainbow is back!", zh: "耶！彩虹回來了！" },
           { en: "Bye-bye, friends!", zh: "朋友們，掰掰！" }
         ],
+        // 挑戰模式已經有道別對話，結尾就不再說 Bye-bye
+        challengeLines: [{ en: "Yay! The rainbow is back!", zh: "耶！彩虹回來了！" }],
         zh: "彩虹恢復了第一道顏色！Chloe 和 Joey 一起找到第一塊彩虹碎片。",
         nextChoices: ["forest", "house"]
       }

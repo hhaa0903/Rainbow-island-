@@ -109,6 +109,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
 .badge .bname { font-family: var(--font-display); font-weight: 800; font-size: clamp(.7rem, 2.2cqw, 1.15rem); line-height: 1; }
 .badge .bstar { width: 40%; height: 40%; }
 .badge .bmood { position: absolute; right: -22%; bottom: -10%; width: 46%; height: 46%; animation: pop .6s cubic-bezier(.3,1.6,.5,1) both; }
+.badge .bage { position: absolute; top: -10%; right: -14%; width: 40%; aspect-ratio: 1; border-radius: 50%; background: var(--sea); color: var(--paper); font-family: var(--font-display); font-weight: 800; font-size: clamp(.7rem, 2.4cqw, 1.2rem); display: flex; align-items: center; justify-content: center; border: 3px solid var(--paper); animation: pop .6s cubic-bezier(.3,1.6,.5,1) both; }
 .badge .ribbon { position: absolute; bottom: -26%; left: 50%; width: 46%; transform: translateX(-50%); animation: pop .6s both; }
 .badge.gifted { animation: glow 1.8s ease-in-out 2; }
 @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
@@ -159,6 +160,11 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
 .pose-wave .arm-r { animation: wave 1.1s ease-in-out 3; transform: rotate(-150deg); }
 @keyframes wave { 0%,100% { transform: rotate(-150deg); } 50% { transform: rotate(-120deg); } }
 .pose-give .arm-r, .pose-drinks .arm-r { transform: rotate(-78deg); }
+.pose-listen .arm-r { transform: rotate(-165deg); }
+.hearts { opacity: 0; }
+.hearts.show { animation: hearts 2s ease forwards; }
+@keyframes hearts { 0% { opacity: 0; transform: translateY(10px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-50px); } }
+.intro-card .seg button { min-height: 44px; }
 .held { opacity: 0; transition: opacity .4s, transform .4s; transform: translateY(10px); }
 .pose-drinks .held-drinks, .pose-give .held-gift { opacity: 1; transform: none; }
 .mouth-talk { opacity: 0; }
@@ -297,6 +303,8 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
           <span class="tag">給家長・故事開場</span>
           <p id="introText"></p>
           <p class="tag" id="introNote"></p>
+          <div class="seg" role="radiogroup" aria-label="難度" id="segChallenge"></div>
+          <p class="tag" id="challengeNote"></p>
           <div class="row"><button class="btn primary big" id="btnStart">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l12 8-12 8z" fill="currentColor"/></svg>出發</button></div>
         </div>
@@ -389,6 +397,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
     <div class="sheet-head"><h2 id="helpH">怎麼玩</h2><button class="icon-btn" data-close aria-label="關閉">✕</button></div>
     <ol>
       <li>首頁選「Chloe 玩」「Joey 玩」或「姊妹一起玩」。</li>
+      <li>開場時可以選「簡單模式」或「挑戰模式」（多幾組對話，例如問年紀、反過來問小兔子、道別）。</li>
       <li>在地圖點<b>迎賓碼頭</b>，家長先讀開場故事，按「出發」。</li>
       <li>小兔子說一句話。孩子試著回應：一個字、名字、手勢、跟著示範說都可以。</li>
       <li>需要時按「再聽一次」「需要幫忙」→「英文小幫手」，或由家長打開「中文小提示」。</li>
@@ -412,6 +421,12 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
         <div class="seg" role="radiogroup" aria-label="誰先開始" id="segLead"></div>
       </div>
       <p class="muted" id="modeNote" hidden>冒險進行中：新的設定會在下一次冒險開始時使用。</p>
+    </section>
+
+    <section>
+      <h3>難度</h3>
+      <div class="seg" role="radiogroup" aria-label="難度" id="segChallengeP"></div>
+      <p class="muted" id="challengeNoteP"></p>
     </section>
 
     <section>
@@ -486,7 +501,7 @@ const NS = "http://www.w3.org/2000/svg";
 /* ================= storage ================= */
 const KEY = "rainbow-island-v1";
 const DEFAULTS = {
-  settings: { mode: "both", lead: "chloe", hints: "more", rate: "slow", muted: false, mic: false },
+  settings: { mode: "both", lead: "chloe", hints: "more", rate: "slow", muted: false, mic: false, challenge: false },
   progress: { explored: [], shards: [], wish: null, adventures: 0 }
 };
 function load() {
@@ -670,7 +685,23 @@ function activePlayers(mode, lead) {
   return lead === "joey" ? ["joey", "chloe"] : ["chloe", "joey"];
 }
 function whoName(who) { return who === "both" ? "Chloe and Joey" : D.players[who].name; }
-function fill(text, who) { return String(text).replace(/\{name\}/g, whoName(who)); }
+function fill(text, who) {
+  const p = D.players[who];
+  const age = p ? p.ageEn || "" : "";
+  return String(text).replace(/\{name\}/g, whoName(who)).replace(/\{age\}/g, age)
+    .replace(/\{Age\}/g, age.charAt(0).toUpperCase() + age.slice(1));
+}
+/* answers that depend on the child: show both versions, e.g. "Eight.／Six." */
+function refText(a) {
+  const out = [];
+  ["chloe", "joey"].forEach((id) => { const t = fill(a, id); if (out.indexOf(t) < 0) out.push(t); });
+  return out.join("／");
+}
+function activeSteps(level, challenge) { return level.steps.filter((s) => !s.challengeOnly || challenge); }
+function challengeDesc(level) {
+  const extra = level.steps.filter((s) => s.challengeOnly).map((s) => s.title.replace(/（挑戰）/, ""));
+  return extra.length ? `挑戰模式多 ${extra.length} 組對話：${extra.join("、")}。` : "這一關沒有挑戰內容。";
+}
 const MODES = [
   { id: "chloe", label: "Chloe 玩", avas: ["chloe"] },
   { id: "joey", label: "Joey 玩", avas: ["joey"] },
@@ -839,6 +870,11 @@ function buildScene(level) {
       <g transform="translate(12 12) scale(.56)">${ICONS.star.replace(/<\/?svg[^>]*>/g, "")}</g>
       <g transform="translate(12 52) scale(.9)">${ICONS.ribbon.replace(/<\/?svg[^>]*>/g, "")}</g>
     </g>
+  </g></g>
+  <g transform="translate(205 150)"><g id="hearts" class="hearts">
+    <path d="M0 8 C-14 -6 -26 4 -12 18 L0 28 L12 18 C26 4 14 -6 0 8 Z" fill="#F28B82"/>
+    <path transform="translate(-40 18) scale(.6)" d="M0 8 C-14 -6 -26 4 -12 18 L0 28 L12 18 C26 4 14 -6 0 8 Z" fill="#F7B9B2"/>
+    <path transform="translate(40 14) scale(.7)" d="M0 8 C-14 -6 -26 4 -12 18 L0 28 L12 18 C26 4 14 -6 0 8 Z" fill="#F7B9B2"/>
   </g></g>`;
   $("#tray").innerHTML = "";
 }
@@ -880,6 +916,22 @@ const FEEDBACK = {
     el && el.classList.add("in");
     setPose("idle");
   },
+  badgeAge(who) {
+    const ids = who === "both" ? ["chloe", "joey"] : [who];
+    ids.forEach((id) => {
+      const b = $("#badge-" + id) || (FEEDBACK.badgeName(id), $("#badge-" + id));
+      const old = b.querySelector(".bage"); old && old.remove();
+      const a = document.createElement("span"); a.className = "bage";
+      a.textContent = D.players[id].ageNum; b.appendChild(a);
+    });
+    hop();
+  },
+  bunnyHappy() {
+    setPose("idle");
+    const h = $("#hearts"); if (h) { h.classList.remove("show"); void h.getBBox(); h.classList.add("show"); }
+    hop();
+  },
+  waveBye() { setPose("wave"); },
   giftBadge() {
     setPose("idle");
     ["chloe", "joey"].forEach((id) => {
@@ -893,9 +945,9 @@ const FEEDBACK = {
 
 /* ================= play engine ================= */
 let run = null;
-function buildQueue(level, players) {
+function buildQueue(level, players, challenge) {
   const q = []; let alt = 0;
-  level.steps.forEach((st) => {
+  activeSteps(level, challenge).forEach((st) => {
     if (players.length === 1) { q.push({ step: st, who: players[0], sub: 0 }); return; }
     const c = st.coop || "each";
     if (c === "together") q.push({ step: st, who: "both", sub: 0 });
@@ -908,13 +960,20 @@ function startLevel(id) {
   const level = levelById(id);
   stopListening(); Voice.cancel();
   const players = activePlayers();
-  run = { level, players, mode: S.settings.mode, queue: buildQueue(level, players), qi: -1, turn: null, phase: "intro", pick: null, helpOpen: false, nudged: false };
+  const challenge = !!S.settings.challenge;
+  run = { level, players, challenge, mode: S.settings.mode, queue: buildQueue(level, players, challenge), qi: -1, turn: null, phase: "intro", pick: null, helpOpen: false, nudged: false };
   buildScene(level);
   $("#playTitle").innerHTML = `${level.zh}<small>${level.name}</small>`;
   $("#bubble").className = "bubble empty"; $("#bubble").innerHTML = "";
   $("#cues").hidden = true;
   $("#introText").textContent = level.intro.zh;
-  $("#introNote").textContent = level.intro.parentNote + (players.length > 1 ? "・姊妹輪流" : "");
+  const nSteps = activeSteps(level, challenge).length;
+  const mins = Math.max(3, Math.round(run.queue.length * 0.75));
+  $("#introNote").textContent = `${challenge ? "挑戰模式" : "簡單模式"}・約 ${mins} 分鐘・${nSteps} 組對話・${level.intro.parentNote}` + (players.length > 1 ? "・姊妹輪流" : "");
+  seg($("#segChallenge"), [{ v: "basic", t: "簡單模式" }, { v: "challenge", t: "挑戰模式" }], challenge ? "challenge" : "basic", (v) => {
+    S.settings.challenge = v === "challenge"; save(); startLevel(level.id);
+  });
+  $("#challengeNote").textContent = challengeDesc(level);
   $("#turnChip").innerHTML = whoChip();
   setControls("intro");
   renderFootsteps();
@@ -987,7 +1046,7 @@ function nextTurn() {
   $("#answers").innerHTML = `<div class="k">${esc(st.title)}${t.who === "both" ? "・兩人一起說" : "・" + D.players[t.who].name}</div>
     <div><span class="k">簡單版</span><div class="ans">${st.answers.simple.map((a) => esc(fill(a, t.who))).join("／")}</div></div>
     <div><span class="k">進階版</span><div class="ans">${st.answers.advanced.map((a) => esc(fill(a, t.who))).join("／")}</div></div>`;
-  $("#waitTip").textContent = st.id === "thanks" ? "留一點時間，讓孩子自然地說。先等約 5～10 秒，再提供提示。" : "先等約 5～10 秒，必要時用手勢，再提供提示。";
+  $("#waitTip").textContent = st.waitTip || "先等約 5～10 秒，必要時用手勢，再提供提示。";
   renderBubble(lines, run.level.host.name);
   renderFootsteps();
   chime("pop");
@@ -1055,7 +1114,7 @@ async function finishLevel() {
   $("#shard").classList.add("show");
   setPose("wave"); hop();
   chime("big");
-  const lines = level.ending.lines;
+  const lines = run.challenge && level.ending.challengeLines ? level.ending.challengeLines : level.ending.lines;
   renderBubble(lines, level.host.name);
   await Promise.all([speakLines(lines), wait(2600)]);
   run.already = already;
@@ -1158,6 +1217,12 @@ function renderParent() {
   $("#leadRow").hidden = st.mode !== "both";
   seg($("#segLead"), [{ v: "chloe", t: "Chloe 先" }, { v: "joey", t: "Joey 先" }], st.lead, (v) => { st.lead = v; save(); renderParent(); });
   $("#modeNote").hidden = !(run && run.phase !== "intro");
+  const lvC = (run && run.level) || LEVELS.find((l) => l.status === "playable");
+  seg($("#segChallengeP"), [{ v: "basic", t: "簡單模式" }, { v: "challenge", t: "挑戰模式" }], st.challenge ? "challenge" : "basic", (v) => {
+    st.challenge = v === "challenge"; save(); renderParent();
+    if (run && run.phase === "intro") startLevel(run.level.id);
+  });
+  $("#challengeNoteP").textContent = challengeDesc(lvC) + (run && run.phase !== "intro" ? " 冒險進行中：會在下一次冒險開始時使用。" : "");
   seg($("#segHints"), [{ v: "more", t: "較多提示" }, { v: "fewer", t: "較少提示" }], st.hints, (v) => { st.hints = v; save(); renderParent(); });
   seg($("#segRate"), [{ v: "slow", t: "慢一點" }, { v: "normal", t: "一般" }], st.rate, (v) => { st.rate = v; save(); renderParent(); renderSpeed(); });
   updateVoiceStatus();
@@ -1165,7 +1230,7 @@ function renderParent() {
   const lv = (run && run.level) || LEVELS.find((l) => l.status === "playable");
   $("#refH").textContent = `本關參考回答：${lv.zh}`;
   $("#refTable").innerHTML = `<tr><th>對話</th><th>小兔子說</th><th>簡單版</th><th>進階版</th></tr>` + lv.steps.map((s) =>
-    `<tr><td>${esc(s.title)}</td><td class="en">${s.lines.map((l) => esc(l.en)).join(" ")}</td><td class="en">${s.answers.simple.map((a) => esc(fill(a, "chloe").replace("Chloe", "Chloe／Joey"))).join("<br>")}</td><td class="en">${s.answers.advanced.map((a) => esc(fill(a, "chloe").replace("Chloe", "Chloe／Joey"))).join("<br>")}</td></tr>`).join("");
+    `<tr><td>${esc(s.title)}</td><td class="en">${s.lines.map((l) => esc(refText(l.en))).join(" ")}</td><td class="en">${s.answers.simple.map((a) => esc(refText(a))).join("<br>")}</td><td class="en">${s.answers.advanced.map((a) => esc(refText(a))).join("<br>")}</td></tr>`).join("");
   $("#micSupport").textContent = SR ? "這個瀏覽器有內建語音辨識，可以選擇開啟。" : "這個瀏覽器不支援語音辨識，小耳朵不會出現；遊戲完全不受影響。";
   $("#chkMic").checked = !!st.mic; $("#chkMic").disabled = !SR;
   const P = S.progress;
