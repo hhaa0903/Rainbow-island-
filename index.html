@@ -265,6 +265,53 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
 .choices button[aria-pressed="true"] { border-color: var(--forest); }
 .row-btns { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 
+/* ---------- mini games ---------- */
+.games-intro { margin: 0; color: var(--ink); font-size: 1rem; }
+.games-intro.muted { color: var(--ink-soft); font-size: .9rem; }
+.game-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+.game-card { border: 0; background: var(--paper); border-radius: var(--radius); padding: 16px; box-shadow: 0 5px 0 var(--line); display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.game-card svg { width: 110px; height: 90px; }
+.game-card b { font-size: 1.35rem; }
+.game-card .en { color: var(--coral-deep); font-weight: 700; line-height: 1; }
+.game-card span.d { color: var(--ink-soft); font-size: .92rem; }
+.gstage { position: relative; overflow: hidden; border-radius: var(--radius); background: linear-gradient(180deg, var(--sea-soft), var(--cream)); padding: 14px; display: flex; flex-direction: column; gap: 14px; min-height: 52dvh; box-shadow: 0 6px 0 rgba(46,124,144,.18); }
+.gtop { display: flex; align-items: center; gap: 10px; }
+.gguide { width: 72px; height: 78px; flex: none; }
+.gbubble { background: var(--paper); border-radius: 22px; padding: 10px 18px; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.2rem, 4vw, 2rem); line-height: 1.2; box-shadow: 0 4px 0 rgba(54,66,74,.1); min-width: 0; }
+.gbubble small { display: block; font-family: var(--font-body); font-size: .5em; color: var(--ink-soft); }
+.gboard { flex: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: clamp(10px, 3vw, 24px); }
+.gopt { border: 5px solid transparent; background: var(--paper); border-radius: 28px; width: clamp(104px, 26vw, 190px); aspect-ratio: 1; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; box-shadow: 0 5px 0 var(--line); transition: opacity .3s, transform .2s; }
+.gopt svg { width: 72%; height: 72%; }
+.gopt .w { font-family: var(--font-display); font-weight: 700; font-size: clamp(.95rem, 2.6vw, 1.3rem); line-height: 1.1; text-align: center; }
+.gopt.sent .w { font-size: clamp(.75rem, 2vw, 1rem); }
+.gopt.right { border-color: var(--forest); background: #EEF7EF; animation: pop .5s cubic-bezier(.3,1.6,.5,1); }
+.gopt.dim { opacity: .3; }
+.gopt.wiggle { animation: wiggle .5s ease; }
+@keyframes wiggle { 20% { transform: rotate(-8deg); } 40% { transform: rotate(7deg); } 60% { transform: rotate(-5deg); } 80% { transform: rotate(3deg); } }
+.hide-words .gopt .w, .hide-words .mcard .w { display: none; }
+.gmem { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(8px, 2vw, 14px); width: min(100%, 620px); }
+.mcard { border: 0; border-radius: 20px; aspect-ratio: 1; padding: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 0 var(--line); background: repeating-linear-gradient(135deg, var(--coral) 0 12px, var(--butter) 12px 24px, var(--sea) 24px 36px, #7DB98A 36px 48px); transition: transform .25s; }
+.mcard .face { display: none; flex-direction: column; align-items: center; width: 100%; height: 100%; justify-content: center; }
+.mcard svg { width: 70%; height: 70%; }
+.mcard .w { font-family: var(--font-display); font-weight: 700; font-size: clamp(.75rem, 2.2vw, 1.1rem); line-height: 1; }
+.mcard.open { background: var(--paper); animation: flip .3s ease; }
+.mcard.open .face { display: flex; }
+.mcard.matched { background: #EEF7EF; box-shadow: 0 0 0 4px var(--forest); }
+@keyframes flip { from { transform: scaleX(.1); } to { transform: scaleX(1); } }
+.gtrain { display: flex; flex-direction: row-reverse; justify-content: flex-start; align-items: flex-end; gap: 4px; min-height: 74px; transition: transform 2.2s ease-in; }
+.gtrain.go { transform: translateX(120%); }
+.gtrain svg.eng { width: 96px; height: 74px; flex: none; }
+.gcar { width: 76px; height: 60px; border-radius: 12px; background: var(--sea); border: 3px solid var(--sea-deep); display: flex; align-items: center; justify-content: center; position: relative; animation: pop .5s cubic-bezier(.3,1.6,.5,1); flex: none; }
+.gcar svg { width: 44px; height: 44px; background: var(--paper); border-radius: 10px; }
+.gcar::after { content: ""; position: absolute; bottom: -10px; left: 12px; width: 16px; height: 16px; border-radius: 50%; background: var(--ink); box-shadow: 36px 0 0 var(--ink); }
+.gsay { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; background: var(--butter); border-radius: var(--radius); padding: 12px 14px; }
+.gsay-text { flex: 1; min-width: 160px; }
+.gsay-text small { display: block; font-size: .8rem; color: var(--ink-soft); font-weight: 700; }
+.gsay-text b { font-size: clamp(1.3rem, 4vw, 1.9rem); }
+.gcontrols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.gd-items { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.gd-items svg { width: 52px; height: 52px; background: var(--cream); border-radius: 14px; padding: 4px; }
+
 /* ---------- responsive ---------- */
 @media (orientation: portrait), (max-width: 640px) {
   .play-main { grid-template-columns: minmax(0, 1fr); }
@@ -307,6 +354,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
     </button>
     <div class="home-links">
       <button class="btn" data-open="parent"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="#F28B82"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="#5E9E6E"/></svg>家長面板</button>
+      <button class="btn" data-games><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2" fill="#F28B82"/><rect x="13" y="3" width="8" height="8" rx="2" fill="#FBE5A0"/><rect x="3" y="13" width="8" height="8" rx="2" fill="#5DB7C9"/><rect x="13" y="13" width="8" height="8" rx="2" fill="#7DB98A"/></svg>小遊戲</button>
       <button class="btn" data-open="help"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#FBE5A0"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.6V14" fill="none" stroke="#36424A" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="17.5" r="1.3" fill="#36424A"/></svg>怎麼玩</button>
     </div>
     <p class="home-note">一次約 5 分鐘。孩子聽小動物說話，再用英文回應；家長在旁邊陪伴，按「繼續冒險」讓故事往前走。</p>
@@ -318,6 +366,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
       <button class="icon-btn" id="mapHome" aria-label="回到首頁"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="#F28B82"/></svg></button>
       <span class="chip" id="mapWho"></span>
       <span class="grow"></span>
+      <button class="icon-btn" data-games aria-label="小遊戲"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2" fill="#F28B82"/><rect x="13" y="3" width="8" height="8" rx="2" fill="#FBE5A0"/><rect x="3" y="13" width="8" height="8" rx="2" fill="#5DB7C9"/><rect x="13" y="13" width="8" height="8" rx="2" fill="#7DB98A"/></svg>小遊戲</button>
       <button class="icon-btn" data-mute aria-label="靜音"></button>
       <button class="icon-btn" data-open="parent" aria-label="家長面板"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="#F28B82"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" fill="#5E9E6E"/></svg>家長</button>
     </header>
@@ -394,6 +443,65 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
       </aside>
     </div>
   </section>
+
+  <!-- ========== MINI GAMES ========== -->
+  <section class="screen" id="scrGames" hidden>
+    <header class="topbar">
+      <button class="icon-btn" id="gamesBack" aria-label="回到地圖"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="#36424A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>地圖</button>
+      <div class="place-title">小遊戲廣場<small>Mini Games</small></div>
+      <span class="grow"></span>
+      <span class="chip" id="gamesWho"></span>
+      <button class="icon-btn" data-mute aria-label="靜音"></button>
+    </header>
+    <p class="games-intro">用小遊戲複習島上學過的單字和句子。點錯沒關係，圖片會說出自己的名字，再試一次就好。</p>
+    <div class="game-cards" id="gameCards"></div>
+    <p class="games-intro muted" id="gamesPool"></p>
+  </section>
+
+  <section class="screen" id="scrGame" hidden>
+    <header class="topbar">
+      <button class="icon-btn" id="gameBack" aria-label="回到小遊戲"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="#36424A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>小遊戲</button>
+      <div class="place-title" id="gameTitle"></div>
+      <span class="grow"></span>
+      <div class="footsteps" id="gameSteps" aria-hidden="true"></div>
+      <span class="chip" id="gameChip"></span>
+      <button class="icon-btn" data-mute aria-label="靜音"></button>
+    </header>
+    <div class="gstage" id="gstage">
+      <div class="gtop">
+        <svg class="gguide" viewBox="-60 -190 120 130" aria-hidden="true"><ellipse cx="-22" cy="-160" rx="12" ry="32" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/><ellipse cx="22" cy="-160" rx="12" ry="32" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/><ellipse cx="-22" cy="-158" rx="5" ry="22" fill="#F7B9B2"/><ellipse cx="22" cy="-158" rx="5" ry="22" fill="#F7B9B2"/><circle cx="0" cy="-112" r="44" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/><circle cx="-15" cy="-118" r="5" fill="#36424A"/><circle cx="15" cy="-118" r="5" fill="#36424A"/><circle cx="-28" cy="-100" r="7" fill="#F28B82" opacity=".45"/><circle cx="28" cy="-100" r="7" fill="#F28B82" opacity=".45"/><ellipse cx="0" cy="-106" rx="5" ry="3.5" fill="#E8766C"/><path d="M-9 -98 Q0 -88 9 -98" stroke="#36424A" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+        <div class="gbubble" id="gbubble" aria-live="polite"></div>
+      </div>
+      <div class="gboard" id="gboard"></div>
+      <div class="gtrain" id="gtrain" hidden></div>
+    </div>
+    <div class="gsay" id="gSay" hidden>
+      <div class="gsay-text"><small>換你說</small><b class="en" id="gSayText"></b></div>
+      <button class="btn sea" id="gSayModel">再聽示範</button>
+      <button class="btn primary big" id="gSayDone">說好了
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h13M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div class="gcontrols">
+      <button class="kid-btn" id="gReplay"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 19h8l10-8v26l-10-8H8z" fill="#5DB7C9"/><path d="M32 17c3 2 4.5 4.5 4.5 7s-1.5 5-4.5 7M37 12c5 3.5 7 7.5 7 12s-2 8.5-7 12" fill="none" stroke="#2E7C90" stroke-width="3" stroke-linecap="round"/></svg>再聽一次</button>
+      <button class="kid-btn" id="gZh" aria-pressed="false"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="7" width="38" height="30" rx="10" fill="#F28B82"/><path d="M16 44l4-8h8z" fill="#F28B82"/><text x="24" y="31" text-anchor="middle" font-size="20" font-weight="700" fill="#FFFDF7" font-family="Noto Sans TC, sans-serif">中</text></svg>中文小提示</button>
+      <button class="kid-btn" id="gWords" aria-pressed="true"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="10" width="40" height="28" rx="8" fill="#FBE5A0" stroke="#C99B2E" stroke-width="2.5"/><text x="24" y="31" text-anchor="middle" font-size="17" font-weight="800" fill="#36424A" font-family="Baloo 2, sans-serif">abc</text></svg>英文字</button>
+    </div>
+    <div class="note zh" id="gZhBox" hidden></div>
+    <div class="note warn" id="gVoiceNote" hidden></div>
+  </section>
+</div>
+
+<div class="overlay" id="ovGameDone" hidden>
+  <div class="sheet done-sheet" role="dialog" aria-modal="true" aria-labelledby="gdH">
+    <h2 id="gdH">完成了！</h2>
+    <div class="gd-items" id="gdItems"></div>
+    <p id="gdText"></p>
+    <div class="row-btns">
+      <button class="btn primary" id="gdAgain">再玩一次</button>
+      <button class="btn coral" id="gdOther">換一個遊戲</button>
+      <button class="btn" id="gdMap">回到地圖</button>
+    </div>
+  </div>
 </div>
 
 <!-- ========== OVERLAYS ========== -->
@@ -457,6 +565,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
       <li>需要時按「再聽一次」「需要幫忙」→「英文小幫手」，或由家長打開「中文小提示」。</li>
       <li>家長按「繼續冒險」，看看動物和場景的變化，再按「下一段」。</li>
       <li>完成後彩虹會恢復一道顏色，可以再玩一次或換人玩。</li>
+      <li>地圖右上角的「小遊戲」有三個複習遊戲：聽聽找找、翻翻卡、句子小火車。點錯不扣分，圖片會說出自己的名字，再試一次就好。</li>
     </ol>
     <p class="muted">畫面上的圖片（心情、飲料）是幫助理解的提示，不是考試。孩子說了哪一個，就點那張圖，動物會跟著回應。</p>
     <div class="row-btns"><button class="btn primary" data-close>好</button></div>
@@ -556,7 +665,7 @@ const NS = "http://www.w3.org/2000/svg";
 /* ================= storage ================= */
 const KEY = "rainbow-island-v1";
 const DEFAULTS = {
-  settings: { mode: "both", lead: "chloe", hints: "more", rate: "slow", muted: false, mic: false, challenge: false, playMode: null },
+  settings: { mode: "both", lead: "chloe", hints: "more", rate: "slow", muted: false, mic: false, challenge: false, playMode: null, gameWords: true },
   progress: { explored: [], shards: [], wish: null, adventures: 0 }
 };
 function load() {
@@ -789,7 +898,7 @@ const MODES = [
   { id: "both", label: "姊妹一起玩", avas: ["chloe", "joey"] }
 ];
 function show(id) {
-  ["scrHome", "scrMap", "scrPlay"].forEach((s) => { $("#" + s).hidden = s !== id; });
+  ["scrHome", "scrMap", "scrPlay", "scrGames", "scrGame"].forEach((s) => { $("#" + s).hidden = s !== id; });
   window.scrollTo(0, 0);
 }
 function openOv(id) { $("#" + id).hidden = false; const f = $("#" + id).querySelector("button"); f && f.focus({ preventScroll: true }); }
@@ -1781,6 +1890,221 @@ document.addEventListener("keydown", (e) => {
   ["ovParent", "ovHelp", "ovPreview"].forEach((id) => { if (!$("#" + id).hidden) closeOv(id); });
 });
 document.addEventListener("visibilitychange", () => { if (document.hidden) { Voice.cancel(); setTalking(false); stopListening(); } });
+
+/* ================= mini games ================= */
+const GAMES = [
+  { id: "find", zh: "聽聽找找", en: "Listen & Find", d: "聽小兔子說一個單字，找出對的圖片，再跟著說。",
+    art: `<svg viewBox="0 0 110 90" aria-hidden="true"><rect x="4" y="22" width="44" height="44" rx="12" fill="#FFF8E6" stroke="#E5DCC4" stroke-width="3"/><g transform="translate(8 26) scale(.56)">${strip(ICONS.milk)}</g><rect x="58" y="22" width="44" height="44" rx="12" fill="#EEF7EF" stroke="#5E9E6E" stroke-width="4"/><g transform="translate(62 26) scale(.56)">${strip(ICONS.apple)}</g><path d="M74 72l6 14 4-6 7 0z" fill="#36424A"/></svg>` },
+  { id: "memory", zh: "翻翻卡", en: "Memory Cards", d: "翻開兩張一樣的卡片。每翻一張，都會聽到它的英文。",
+    art: `<svg viewBox="0 0 110 90" aria-hidden="true"><rect x="6" y="10" width="30" height="34" rx="7" fill="#F28B82"/><rect x="40" y="10" width="30" height="34" rx="7" fill="#FFFDF7" stroke="#5E9E6E" stroke-width="3"/><g transform="translate(43 15) scale(.38)">${strip(ICONS.banana)}</g><rect x="74" y="10" width="30" height="34" rx="7" fill="#5DB7C9"/><rect x="6" y="48" width="30" height="34" rx="7" fill="#FBE5A0"/><rect x="40" y="48" width="30" height="34" rx="7" fill="#7DB98A"/><rect x="74" y="48" width="30" height="34" rx="7" fill="#FFFDF7" stroke="#5E9E6E" stroke-width="3"/><g transform="translate(77 53) scale(.38)">${strip(ICONS.banana)}</g></svg>` },
+  { id: "train", zh: "句子小火車", en: "Sentence Train", d: "聽一句話，找出對的圖片，火車就多一節車廂。",
+    art: `<svg viewBox="0 0 110 90" aria-hidden="true"><rect x="6" y="36" width="34" height="30" rx="7" fill="#5DB7C9"/><rect x="12" y="41" width="22" height="18" rx="4" fill="#FFFDF7"/><rect x="44" y="36" width="34" height="30" rx="7" fill="#5DB7C9"/><rect x="50" y="41" width="22" height="18" rx="4" fill="#FFFDF7"/><rect x="82" y="30" width="24" height="36" rx="6" fill="#F28B82"/><rect x="88" y="18" width="8" height="14" fill="#36424A"/><circle cx="16" cy="70" r="6" fill="#36424A"/><circle cx="32" cy="70" r="6" fill="#36424A"/><circle cx="54" cy="70" r="6" fill="#36424A"/><circle cx="70" cy="70" r="6" fill="#36424A"/><circle cx="94" cy="70" r="6" fill="#36424A"/></svg>` }
+];
+const ENGINE_SVG = `<svg class="eng" viewBox="0 0 96 74" aria-hidden="true"><rect x="4" y="26" width="76" height="34" rx="8" fill="#F28B82" stroke="#C95E55" stroke-width="3"/><rect x="40" y="4" width="40" height="30" rx="6" fill="#F28B82" stroke="#C95E55" stroke-width="3"/><rect x="48" y="10" width="24" height="16" rx="4" fill="#CDEDF2"/><rect x="12" y="10" width="12" height="18" fill="#36424A"/><path d="M80 52l12 6H80z" fill="#C95E55"/><circle cx="20" cy="64" r="9" fill="#36424A"/><circle cx="60" cy="64" r="9" fill="#36424A"/></svg>`;
+const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const cap = (w) => w.charAt(0).toUpperCase() + w.slice(1);
+const iconOf = (it) => it.icon || it.id;
+/* words / sentences from the places the girls have explored (the dock always counts) */
+function practicePool(kind) {
+  const pick = (lvs) => {
+    const seen = {}, out = [];
+    lvs.forEach((l) => ((l.practice && l.practice[kind]) || []).forEach((it) => { const k = iconOf(it); if (!seen[k] && ICONS[k]) { seen[k] = 1; out.push(it); } }));
+    return out;
+  };
+  let pool = pick(LEVELS.filter((l) => l.id === "dock" || S.progress.explored.includes(l.id)));
+  if (pool.length < 5) pool = pick(LEVELS);
+  return pool;
+}
+let G = null;
+function gameWho() { return G.players[G.turn % G.players.length]; }
+function gChip() {
+  const who = gameWho();
+  $("#gameChip").innerHTML = avatar(who) + `<span>${G.players.length > 1 ? "輪到 " : ""}${D.players[who].name}</span>`;
+}
+function gSteps(total, done) { $("#gameSteps").innerHTML = Array.from({ length: total }, (_, i) => `<i class="${i < done ? "done" : i === done ? "now" : ""}"></i>`).join(""); }
+function gBubble(en, small) { $("#gbubble").innerHTML = (small ? `<small>${esc(small)}</small>` : "") + esc(en); }
+function gSay(lines) {
+  if (S.settings.muted || Voice.status === "unsupported" || Voice.status === "quiet") {
+    const n = $("#gVoiceNote"); n.hidden = false;
+    n.textContent = S.settings.muted ? "目前是靜音。請家長念出泡泡裡的英文。" : "沒有聽到聲音嗎？請家長念出泡泡裡的英文，遊戲照常進行。";
+  } else $("#gVoiceNote").hidden = true;
+  return Voice.say(lines.map((t) => ({ text: t, pitch: 1.15 }))).then(() => {
+    if (Voice.status === "quiet") { const n = $("#gVoiceNote"); n.hidden = false; n.textContent = "沒有聽到聲音嗎？請家長念出泡泡裡的英文，遊戲照常進行。"; }
+  });
+}
+function optHtml(it, sentence) {
+  return `<button class="gopt${sentence ? " sent" : ""}" data-k="${iconOf(it)}" aria-label="${esc(it.en)}">${ICONS[iconOf(it)]}<span class="w">${esc(it.en)}</span></button>`;
+}
+function renderGames() {
+  $("#gamesWho").innerHTML = whoChip();
+  $("#gameCards").innerHTML = GAMES.map((g) => `<button class="game-card" data-game="${g.id}">${g.art}<b>${g.zh}</b><span class="en">${g.en}</span><span class="d">${g.d}</span></button>`).join("");
+  const w = practicePool("words").length, se = practicePool("sentences").length;
+  $("#gamesPool").textContent = `目前會出現 ${w} 個單字、${se} 個句子，來自孩子去過的地方。去過更多地方，小遊戲的內容也會變多。`;
+}
+function openGames() { endRun(); G = null; Voice.cancel(); renderGames(); show("scrGames"); }
+function startGame(type) {
+  Voice.cancel();
+  const players = activePlayers();
+  G = { type, players, turn: 0, i: 0, got: [], lock: false };
+  const meta = GAMES.find((g) => g.id === type);
+  $("#gameTitle").innerHTML = `${meta.zh}<small>${meta.en}</small>`;
+  $("#gstage").classList.toggle("hide-words", !S.settings.gameWords);
+  $("#gWords").setAttribute("aria-pressed", String(S.settings.gameWords));
+  $("#gZhBox").hidden = true; $("#gZh").setAttribute("aria-pressed", "false");
+  $("#gSay").hidden = true; $("#gVoiceNote").hidden = true;
+  $("#gtrain").hidden = type !== "train"; $("#gtrain").className = "gtrain"; $("#gtrain").innerHTML = ENGINE_SVG;
+  show("scrGame");
+  if (type === "memory") {
+    const pairs = shuffle(practicePool("words")).slice(0, 4);
+    G.cards = shuffle(pairs.concat(pairs)).map((it, idx) => ({ it, idx, open: false, matched: false }));
+    G.open = [];
+    G.total = pairs.length;
+    $("#gboard").innerHTML = `<div class="gmem">${G.cards.map((c) => `<button class="mcard" data-i="${c.idx}" aria-label="卡片"><span class="face">${ICONS[iconOf(c.it)]}<span class="w">${esc(c.it.en)}</span></span></button>`).join("")}</div>`;
+    gBubble("Find two the same!", "翻開兩張一樣的卡片");
+    $("#gZhBox").innerHTML = "<b>找出兩張一樣的卡片。</b>每翻一張都會聽到英文，配對成功時一起再說一次。";
+    gSteps(G.total, 0); gChip();
+    gSay(["Find two the same!"]);
+    return;
+  }
+  const pool = shuffle(practicePool(type === "train" ? "sentences" : "words"));
+  const n = type === "train" ? 5 : 6;
+  G.pool = pool;
+  G.rounds = Array.from({ length: n }, (_, i) => pool[i % pool.length]);
+  G.total = n;
+  gRound();
+}
+function gRound() {
+  const t = G.rounds[G.i], sentence = G.type === "train";
+  G.target = t; G.lock = false;
+  const others = shuffle(G.pool.filter((x) => iconOf(x) !== iconOf(t))).slice(0, 2);
+  $("#gboard").innerHTML = shuffle([t].concat(others)).map((it) => optHtml(it, sentence)).join("");
+  $("#gSay").hidden = true;
+  const prompt = sentence ? t.en : cap(t.en) + "!";
+  gBubble(prompt, sentence ? "聽一聽，是哪一張？" : "找一找，是哪一張？");
+  $("#gZhBox").innerHTML = `<b>${esc(t.zh)}</b>${sentence ? "聽句子找圖片，找到後跟著說一次。" : "聽單字找圖片，找到後跟著說一次。"}`;
+  gSteps(G.total, G.i); gChip();
+  chime("pop");
+  gSay([prompt]);
+}
+function gPromptText() {
+  if (!G) return "";
+  if (G.type === "memory") return "Find two the same!";
+  return G.type === "train" ? G.target.en : cap(G.target.en) + "!";
+}
+function gTapOption(btn) {
+  if (!G || G.lock || G.type === "memory") return;
+  const k = btn.dataset.k, t = G.target, sentence = G.type === "train";
+  if (k === iconOf(t)) {
+    G.lock = true;
+    btn.classList.add("right");
+    $$("#gboard .gopt").forEach((b) => { if (b !== btn) b.classList.add("dim"); });
+    chime("ok");
+    G.got.push(t);
+    if (sentence) {
+      const car = document.createElement("div"); car.className = "gcar"; car.innerHTML = ICONS[iconOf(t)];
+      $("#gtrain").appendChild(car);
+    }
+    const say = sentence ? t.en : cap(t.en) + ".";
+    gBubble(sentence ? say : `Yes! ${say}`, "找到了！");
+    gSay(sentence ? [say] : ["Yes!", say]).then(() => {
+      if (!G || G.target !== t) return;
+      $("#gSayText").textContent = say;
+      $("#gSay").hidden = false;
+      $("#gSayDone").focus({ preventScroll: true });
+    });
+  } else {
+    const it = G.pool.find((x) => iconOf(x) === k);
+    btn.classList.remove("wiggle"); void btn.offsetWidth; btn.classList.add("wiggle");
+    const that = sentence ? it.en : `That's ${it.en}.`;
+    const again = sentence ? t.en : cap(t.en) + "!";
+    gBubble(again, sentence ? `那張是：${it.en}　再聽一次：` : `那是 ${it.en}，再找找看：`);
+    gSay([that, again]);
+  }
+}
+function gNext() {
+  $("#gSay").hidden = true;
+  G.i++; G.turn++;
+  if (G.i >= G.total) { gFinish(); return; }
+  gRound();
+}
+function gTapCard(btn) {
+  if (!G || G.type !== "memory" || G.lock) return;
+  const c = G.cards[+btn.dataset.i];
+  if (c.open || c.matched) return;
+  c.open = true; btn.classList.add("open");
+  G.open.push(c);
+  gSay([cap(c.it.en) + "."]);
+  gBubble(cap(c.it.en) + ".", "翻到了");
+  if (G.open.length < 2) return;
+  G.lock = true;
+  const [a, b] = G.open;
+  const btnA = $(`#gboard .mcard[data-i="${a.idx}"]`), btnB = btn;
+  if (iconOf(a.it) === iconOf(b.it)) {
+    a.matched = b.matched = true;
+    setTimeout(() => {
+      btnA.classList.add("matched"); btnB.classList.add("matched");
+      chime("ok");
+      G.got.push(a.it);
+      gBubble(cap(a.it.en) + "!", "一樣！大家一起說：");
+      gSay([cap(a.it.en) + "!"]);
+      G.open = []; G.lock = false;
+      gSteps(G.total, G.got.length);
+      G.turn++; gChip();
+      if (G.got.length === G.total) setTimeout(gFinish, 1400);
+    }, 700);
+  } else {
+    setTimeout(() => {
+      a.open = b.open = false;
+      btnA.classList.remove("open"); btnB.classList.remove("open");
+      G.open = []; G.lock = false;
+      G.turn++; gChip();
+      gBubble("Try again!", "不一樣，換下一個人翻翻看");
+    }, 1500);
+  }
+}
+function gFinish() {
+  const type = G.type;
+  const done = () => {
+    if (!G || G.type !== type) return;
+    $("#gdItems").innerHTML = G.got.map((it) => ICONS[iconOf(it)]).join("");
+    $("#gdText").textContent = type === "memory" ? "全部配對好了！翻牌時聽到的單字，可以再說一次給家人聽。"
+      : type === "train" ? "火車載著大家說過的句子出發了！" : "全部找到了！這些單字都在島上見過。";
+    $("#gdH").textContent = type === "train" ? "火車出發囉！" : "完成了！";
+    openOv("ovGameDone");
+  };
+  gSteps(G.total, G.total);
+  chime("big");
+  if (type === "train") {
+    $("#gtrain").classList.add("go");
+    gBubble("Choo choo! Bye-bye!", "火車出發囉");
+    gSay(["Choo choo!", "Bye-bye!"]);
+    setTimeout(done, 2400);
+  } else {
+    gBubble("Yay! You did it!", "完成了");
+    gSay(["Yay!"]);
+    setTimeout(done, 1200);
+  }
+}
+document.addEventListener("click", (e) => { if (e.target.closest("[data-games]")) { primeAudio(); openGames(); } });
+$("#gameCards").addEventListener("click", (e) => { const b = e.target.closest("[data-game]"); if (b) { primeAudio(); startGame(b.dataset.game); } });
+$("#gboard").addEventListener("click", (e) => {
+  const o = e.target.closest(".gopt"); if (o) { gTapOption(o); return; }
+  const c = e.target.closest(".mcard"); if (c) gTapCard(c);
+});
+$("#gReplay").addEventListener("click", () => { if (G) gSay([gPromptText()]); });
+$("#gZh").addEventListener("click", () => { const open = $("#gZhBox").hidden; $("#gZhBox").hidden = !open; $("#gZh").setAttribute("aria-pressed", String(open)); });
+$("#gWords").addEventListener("click", () => {
+  S.settings.gameWords = !S.settings.gameWords; save();
+  $("#gWords").setAttribute("aria-pressed", String(S.settings.gameWords));
+  $("#gstage").classList.toggle("hide-words", !S.settings.gameWords);
+});
+$("#gSayModel").addEventListener("click", () => { gSay([$("#gSayText").textContent]); });
+$("#gSayDone").addEventListener("click", () => { if (G && G.lock) gNext(); });
+$("#gamesBack").addEventListener("click", () => { Voice.cancel(); renderMap(); show("scrMap"); });
+$("#gameBack").addEventListener("click", () => { Voice.cancel(); G = null; renderGames(); show("scrGames"); });
+$("#gdAgain").addEventListener("click", () => { closeOv("ovGameDone"); startGame(G.type); });
+$("#gdOther").addEventListener("click", () => { closeOv("ovGameDone"); openGames(); });
+$("#gdMap").addEventListener("click", () => { closeOv("ovGameDone"); G = null; renderMap(); show("scrMap"); });
 
 /* ================= boot ================= */
 $("#homeRainbow").innerHTML = rainbowPaths(280, 200, 170, 14, S.progress.shards, "").replace(/stroke-width="14"/g, 'stroke-width="14"');

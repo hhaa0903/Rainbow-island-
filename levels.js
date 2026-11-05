@@ -7,6 +7,8 @@
  *   3. unlock.requires 列出要先探索完的地點，沒完成前地圖會顯示「先去…」
  *
  * 地點欄位：
+ *   practice    小遊戲用的單字 words（id = 圖示名稱、en、zh）和句子 sentences（icon、en、zh）。
+ *               孩子探索過的地點，單字和句子就會出現在小遊戲裡。
  *   scene       場景圖（index.html 的 SCENES：dock / forest）
  *   host        主角：id（HOSTS 裡的畫法）、name、zh、pitch（聲音高低）、start（開場狀態，例如 tired）
  *   cast        其他角色，例如 bird。台詞加上 speaker: "bird" 就由牠說
@@ -55,6 +57,22 @@ window.RAINBOW_DATA = {
       icon: "dock",
       map: { x: 235, y: 470 },
       shardColor: "#EF8A80",
+      practice: {
+        words: [
+          { id: "water", en: "water", zh: "水" },
+          { id: "milk", en: "milk", zh: "牛奶" },
+          { id: "happy", en: "happy", zh: "開心" },
+          { id: "sad", en: "sad", zh: "難過" },
+          { id: "sleepy", en: "sleepy", zh: "想睡" }
+        ],
+        sentences: [
+          { icon: "happy", en: "I'm happy.", zh: "我很開心。" },
+          { icon: "sad", en: "I'm sad.", zh: "我很難過。" },
+          { icon: "sleepy", en: "I'm sleepy.", zh: "我想睡覺。" },
+          { icon: "water", en: "Water, please.", zh: "請給我水。" },
+          { icon: "milk", en: "Milk, please.", zh: "請給我牛奶。" }
+        ]
+      },
       unlock: { requires: [] },
       scene: "dock",
       host: { id: "bunny", name: "Bunny", zh: "小兔子", pitch: 1.1 },
@@ -226,6 +244,16 @@ window.RAINBOW_DATA = {
       icon: "forest",
       map: { x: 330, y: 250 },
       shardColor: "#F4AE62",
+      practice: {
+        words: [
+          { id: "tired", en: "tired", zh: "累" },
+          { id: "apple", en: "apple", zh: "蘋果" }
+        ],
+        sentences: [
+          { icon: "tired", en: "I'm tired.", zh: "我好累。" },
+          { icon: "apple", en: "I like apples!", zh: "我喜歡蘋果！" }
+        ]
+      },
       unlock: { requires: ["dock"] },
       host: { id: "bear", name: "Bear", zh: "小熊", pitch: 0.8, start: "tired" },
       cast: { bird: { id: "bird", name: "Bird", zh: "小鳥", pitch: 1.6 } },
@@ -403,6 +431,22 @@ window.RAINBOW_DATA = {
       icon: "house",
       map: { x: 585, y: 205 },
       shardColor: "#F2D46B",
+      practice: {
+        words: [
+          { id: "hat", en: "hat", zh: "帽子" },
+          { id: "ball", en: "ball", zh: "球" },
+          { id: "cookie", en: "cookie", zh: "餅乾" },
+          { id: "teddy", en: "teddy bear", zh: "小熊玩偶" },
+          { id: "box", en: "box", zh: "箱子" },
+          { id: "bed", en: "bed", zh: "床" },
+          { id: "chair", en: "chair", zh: "椅子" }
+        ],
+        sentences: [
+          { icon: "hat", en: "Where is my hat?", zh: "我的帽子在哪裡？" },
+          { icon: "ball", en: "Where is my ball?", zh: "我的球在哪裡？" },
+          { icon: "cookie", en: "Cookie, please.", zh: "請給我餅乾。" }
+        ]
+      },
       unlock: { requires: ["dock"] },
       host: { id: "kitty", name: "Kitty", zh: "小貓", pitch: 1.3 },
       cast: { mouse: { id: "mouse", name: "Mouse", zh: "小老鼠", pitch: 1.8 } },
@@ -566,6 +610,17 @@ window.RAINBOW_DATA = {
       icon: "shop",
       map: { x: 760, y: 360 },
       shardColor: "#7FC08A",
+      practice: {
+        words: [
+          { id: "juice", en: "juice", zh: "果汁" },
+          { id: "banana", en: "banana", zh: "香蕉" }
+        ],
+        sentences: [
+          { icon: "juice", en: "Juice, please.", zh: "請給我果汁。" },
+          { icon: "banana", en: "Banana, please.", zh: "請給我香蕉。" },
+          { icon: "n2", en: "Two apples, please.", zh: "請給我兩個蘋果。" }
+        ]
+      },
       unlock: { requires: ["dock"] },
       host: { id: "squirrel", name: "Squirrel", zh: "松鼠", pitch: 1.35 },
       intro: {
@@ -716,6 +771,20 @@ window.RAINBOW_DATA = {
       icon: "station",
       map: { x: 540, y: 500 },
       shardColor: "#72B5D8",
+      practice: {
+        words: [
+          { id: "ticket", en: "ticket", zh: "車票" },
+          { id: "beach", en: "beach", zh: "海邊" },
+          { id: "mountain", en: "mountain", zh: "山" },
+          { id: "zoo", en: "zoo", zh: "動物園" }
+        ],
+        sentences: [
+          { icon: "ticket", en: "One ticket, please.", zh: "請給我一張票。" },
+          { icon: "beach", en: "Let's go to the beach!", zh: "我們去海邊吧！" },
+          { icon: "zoo", en: "Let's go to the zoo!", zh: "我們去動物園吧！" },
+          { icon: "mountain", en: "Let's go to the mountain!", zh: "我們去山上吧！" }
+        ]
+      },
       unlock: { requires: ["dock"] },
       host: { id: "elephant", name: "Ellie", zh: "小象站長 Ellie", pitch: 0.75 },
       intro: {
