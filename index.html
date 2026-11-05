@@ -161,6 +161,26 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
 @keyframes wave { 0%,100% { transform: rotate(-150deg); } 50% { transform: rotate(-120deg); } }
 .pose-give .arm-r, .pose-drinks .arm-r { transform: rotate(-78deg); }
 .pose-listen .arm-r { transform: rotate(-165deg); }
+.pose-apple .arm-r { transform: rotate(-78deg); }
+.pose-apple .held-apple { opacity: 1; transform: none; }
+.lids { opacity: 0; transition: opacity .8s; }
+.tired .lids { opacity: 1; }
+.tired.b-bob { animation-duration: 5.5s; }
+.bird { transform-box: fill-box; transform-origin: 50% 100%; }
+.bird .eyes-happy { opacity: 0; }
+.bird.happy .eyes-happy { opacity: 1; }
+.bird.happy .eyes-sad { opacity: 0; }
+.bird.talking { animation: chirp .28s ease-in-out infinite alternate; }
+@keyframes chirp { from { transform: rotate(-4deg); } to { transform: rotate(4deg) translateY(-3px); } }
+.bird.peek { animation: hop .7s ease 2; }
+.bird.happy .wing { animation: flap .35s ease-in-out 6 alternate; transform-box: fill-box; transform-origin: 80% 20%; }
+@keyframes flap { to { transform: rotate(-35deg); } }
+.flower .petals { transform-box: fill-box; transform-origin: center; transition: fill .6s; }
+.flower.bloom .petals { animation: pop .7s cubic-bezier(.3,1.6,.5,1) both; }
+.token { width: clamp(40px, 10cqw, 80px); aspect-ratio: 1; border-radius: 50%; background: var(--paper); border: 4px solid var(--coral); box-sizing: border-box; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 3px 0 rgba(54,66,74,.15); animation: pop .6s cubic-bezier(.3,1.6,.5,1) both; }
+.token.joey { border-color: var(--forest); }
+.token svg { width: 66%; height: 66%; }
+.token .tname { position: absolute; bottom: -18%; left: 50%; transform: translateX(-50%); background: var(--butter); border-radius: 999px; padding: 0 6px; font-family: var(--font-display); font-weight: 800; font-size: clamp(.6rem, 1.8cqw, .9rem); line-height: 1.3; white-space: nowrap; }
 .hearts { opacity: 0; }
 .hearts.show { animation: hearts 2s ease forwards; }
 @keyframes hearts { 0% { opacity: 0; transform: translateY(10px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-50px); } }
@@ -360,11 +380,11 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
 
 <div class="overlay" id="ovPreview" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="pvH">
-    <div class="sheet-head"><h2 id="pvH"></h2><span class="next-tag">下次冒險</span></div>
+    <div class="sheet-head"><h2 id="pvH"></h2><span class="next-tag" id="pvTag">下次冒險</span></div>
     <div class="preview-art" id="pvArt"></div>
     <p id="pvText"></p>
     <section>
-      <h3>故事預告・還不能玩</h3>
+      <h3 id="pvH2">故事預告・還不能玩</h3>
       <p class="muted" id="pvTheme"></p>
       <ul id="pvSample"></ul>
       <p class="muted" id="pvWish"></p>
@@ -383,6 +403,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
       <h3>下次想去哪裡？</h3>
       <div class="choices" id="doneChoices"></div>
       <p class="muted" id="doneWish"></p>
+      <div class="row-btns"><button class="btn sea" id="btnGoWish" hidden>現在出發</button></div>
     </section>
     <div class="row-btns">
       <button class="btn primary" id="btnAgain">再玩一次</button>
@@ -398,13 +419,13 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
     <ol>
       <li>首頁選「Chloe 玩」「Joey 玩」或「姊妹一起玩」。</li>
       <li>開場時可以選「簡單模式」或「挑戰模式」（多幾組對話，例如問年紀、反過來問小兔子、道別）。</li>
-      <li>在地圖點<b>迎賓碼頭</b>，家長先讀開場故事，按「出發」。</li>
-      <li>小兔子說一句話。孩子試著回應：一個字、名字、手勢、跟著示範說都可以。</li>
+      <li>在地圖點可以出發的地點（迎賓碼頭；完成後心情森林也會打開），家長先讀開場故事，按「出發」。</li>
+      <li>島上的動物說一句話。孩子試著回應：一個字、名字、手勢、跟著示範說都可以。</li>
       <li>需要時按「再聽一次」「需要幫忙」→「英文小幫手」，或由家長打開「中文小提示」。</li>
-      <li>家長按「繼續冒險」，看看小兔子和場景的變化，再按「下一段」。</li>
+      <li>家長按「繼續冒險」，看看動物和場景的變化，再按「下一段」。</li>
       <li>完成後彩虹會恢復一道顏色，可以再玩一次或換人玩。</li>
     </ol>
-    <p class="muted">畫面上的圖片（心情、飲料）是幫助理解的提示，不是考試。孩子說了哪一個，就點那張圖，小兔子會跟著回應。</p>
+    <p class="muted">畫面上的圖片（心情、飲料）是幫助理解的提示，不是考試。孩子說了哪一個，就點那張圖，動物會跟著回應。</p>
     <div class="row-btns"><button class="btn primary" data-close>好</button></div>
   </div>
 </div>
@@ -475,7 +496,7 @@ h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
     <section>
       <h3>功能說明與限制</h3>
       <ul class="muted">
-        <li>第一版可以完整遊玩「迎賓碼頭」；其他四個地點目前是故事預告。</li>
+        <li>目前可以玩「迎賓碼頭」和「心情森林」（完成碼頭後打開）；其他三個地點是故事預告。</li>
         <li>英文語音使用瀏覽器內建的語音合成，聲音依裝置而不同。沒有聲音時，請家長念出泡泡裡的英文。</li>
         <li>遊戲<b>不會自動判斷</b>孩子說了什麼；是否繼續由家長決定。</li>
         <li>麥克風功能為選用，若裝置不支援或拒絕權限，遊戲照常進行。</li>
@@ -541,6 +562,10 @@ const ICONS = {
   sleepy: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="30" cy="34" r="26" fill="#E6E1F2" stroke="#A99BCB" stroke-width="3"/><path d="M17 33q5 4 10 0M33 33q5 4 10 0" stroke="#36424A" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="30" cy="45" rx="4" ry="3" fill="#8A6F9E"/><text x="46" y="18" font-size="15" font-weight="800" fill="#8A6F9E" font-family="Baloo 2, sans-serif">z</text><text x="54" y="9" font-size="10" font-weight="800" fill="#8A6F9E" font-family="Baloo 2, sans-serif">z</text></svg>`,
   water: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M16 10h32l-4 46a4 4 0 0 1-4 4H24a4 4 0 0 1-4-4z" fill="#FFFDF7" stroke="#5DB7C9" stroke-width="3"/><path d="M19 26h26l-3 30a2 2 0 0 1-2 2H24a2 2 0 0 1-2-2z" fill="#8FD0DD"/><circle cx="28" cy="36" r="2" fill="#FFFDF7"/><circle cx="36" cy="44" r="1.6" fill="#FFFDF7"/></svg>`,
   milk: `<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="25" y="4" width="14" height="7" rx="2" fill="#5DB7C9"/><path d="M24 11h16v7l6 8v30a4 4 0 0 1-4 4H22a4 4 0 0 1-4-4V26l6-8z" fill="#FFFDF7" stroke="#B9C2C6" stroke-width="3" stroke-linejoin="round"/><path d="M18 34h28v10H18z" fill="#CDEDF2"/><path d="M27 39q5-6 10 0" stroke="#5DB7C9" stroke-width="2.5" fill="none"/></svg>`,
+  tired: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="34" r="27" fill="#F6E3C8" stroke="#D7B98E" stroke-width="3"/><path d="M17 30h11M36 30h11" stroke="#36424A" stroke-width="3.2" stroke-linecap="round"/><path d="M18 34q4 3 8 0M38 34q4 3 8 0" stroke="#36424A" stroke-width="2" fill="none" stroke-linecap="round" opacity=".5"/><path d="M25 46q3.5-3 7 0t7 0" stroke="#36424A" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M50 12q4 6 0 9q-4-3 0-9z" fill="#72B5D8"/></svg>`,
+  heart: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 55C11 40 6 27 13 18c7-9 16-6 19 3 3-9 12-12 19-3 7 9 2 22-19 37z" fill="#F28B82" stroke="#C95E55" stroke-width="2.5"/><path d="M19 24q2-5 7-5" stroke="#FFFDF7" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></svg>`,
+  nope: `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="22" fill="#FBE5A0" stroke="#E0B84A" stroke-width="3"/><circle cx="25" cy="29" r="2.8" fill="#36424A"/><circle cx="39" cy="29" r="2.8" fill="#36424A"/><path d="M26 40h12" stroke="#36424A" stroke-width="3" stroke-linecap="round"/><path d="M5 24q-3 8 0 16M59 24q3 8 0 16M10 27q-2 5 0 10M54 27q2 5 0 10" stroke="#C99B2E" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>`,
+  apple: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 18c-6-5-20-4-21 11-1 14 9 28 16 28 3 0 3-1 5-1s2 1 5 1c7 0 17-14 16-28-1-15-15-16-21-11z" fill="#E8766C" stroke="#C95E55" stroke-width="2.5"/><path d="M32 18c0-5 1-9 4-12" stroke="#8A6A4A" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M35 12c4-6 12-6 14-3-4 5-10 5-14 3z" fill="#7DB98A"/><path d="M19 28q2-6 8-7" stroke="#FFFDF7" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/></svg>`,
   star: `<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6l7.6 16.5 18 2-13.4 12.3 3.7 17.8L32 45.5l-15.9 9.1 3.7-17.8L6.4 24.5l18-2z" fill="#F28B82"/></svg>`,
   ribbon: `<svg viewBox="0 0 40 30" aria-hidden="true"><path d="M8 0l-6 28 9-5 5 7 4-30z" fill="#5DB7C9"/><path d="M32 0l6 28-9-5-5 7-4-30z" fill="#5E9E6E"/></svg>`
 };
@@ -593,7 +618,8 @@ const Voice = {
     for (let i = 0; i < lines.length; i++) {
       if (my !== this.token) return "cancelled";
       onLine && onLine(i);
-      const r = await this.one(lines[i], my);
+      const it = typeof lines[i] === "string" ? { text: lines[i] } : lines[i];
+      const r = await this.one(it.text, my, it.pitch);
       if (my !== this.token) return "cancelled";
       if (r === "fail") { this.status = "quiet"; updateVoiceNote(); updateVoiceStatus(); onLine && onLine(-1); return "fail"; }
       if (i < lines.length - 1) await wait(700);
@@ -601,14 +627,14 @@ const Voice = {
     onLine && onLine(-1);
     return "done";
   },
-  one(text, my) {
+  one(text, my, pitch) {
     return new Promise((res) => {
       let started = false, done = false;
       const fin = (r) => { if (done) return; done = true; clearTimeout(t1); clearTimeout(t2); res(r); };
       const u = new SpeechSynthesisUtterance(text);
       u.lang = this.voice ? this.voice.lang : "en-US";
       if (this.voice) u.voice = this.voice;
-      u.rate = this.rate(); u.pitch = 1.1;
+      u.rate = this.rate(); u.pitch = pitch || 1.1;
       u.onstart = () => { started = true; if (this.status !== "ok") { this.status = "ok"; updateVoiceNote(); updateVoiceStatus(); } };
       u.onend = () => fin("ok");
       u.onerror = (e) => fin(e && (e.error === "interrupted" || e.error === "canceled") ? "cancelled" : "fail");
@@ -734,6 +760,9 @@ function whoChip() {
   const m = MODES.find((x) => x.id === S.settings.mode);
   return m.avas.map(avatar).join("") + `<span>${m.label}</span>`;
 }
+function isUnlocked(l) { return ((l.unlock && l.unlock.requires) || []).every((id) => S.progress.explored.includes(id)); }
+function isOpen(l) { return l.status === "playable" && isUnlocked(l); }
+function needText(l) { return "先去" + ((l.unlock && l.unlock.requires) || []).filter((id) => !S.progress.explored.includes(id)).map((id) => levelById(id).zh).join("、"); }
 function renderMap() {
   $("#mapWho").innerHTML = whoChip();
   const P = S.progress;
@@ -743,10 +772,10 @@ function renderMap() {
     return `<path d="M${a.x} ${a.y} Q${mx} ${my} ${b.x} ${b.y}" stroke="#F2DFAE" stroke-width="16" fill="none" stroke-linecap="round"/><path d="M${a.x} ${a.y} Q${mx} ${my} ${b.x} ${b.y}" stroke="#FFF8E6" stroke-width="4" stroke-dasharray="2 14" fill="none" stroke-linecap="round"/>`;
   }).join("");
   const spots = LEVELS.map((l) => {
-    const playable = l.status === "playable";
+    const playable = isOpen(l);
     const explored = P.explored.includes(l.id);
     const wished = P.wish === l.id;
-    const tag = playable ? (explored ? "已探索・可再玩" : "可以出發") : "下次冒險";
+    const tag = playable ? (explored ? "已探索・可再玩" : "可以出發") : l.status === "playable" ? needText(l) : "下次冒險";
     const tagFill = playable ? "#5E9E6E" : "#FBE5A0";
     const tagInk = playable ? "#FFFDF7" : "#36424A";
     const fog = playable ? "" : `<g opacity=".9"><ellipse cx="-44" cy="-46" rx="26" ry="14" fill="#FFFDF7"/><ellipse cx="-22" cy="-52" rx="20" ry="14" fill="#FFFDF7"/></g>`;
@@ -776,20 +805,24 @@ function renderMap() {
     <g opacity=".7"><circle cx="440" cy="330" r="14" fill="#7DB98A"/><circle cx="660" cy="270" r="12" fill="#7DB98A"/><circle cx="420" cy="420" r="10" fill="#7DB98A"/><circle cx="700" cy="470" r="11" fill="#7DB98A"/></g>
     ${spots}`;
   const done = LEVELS.filter((l) => P.shards.includes(l.id)).length;
-  $("#mapHint").innerHTML = done
-    ? `彩虹已經恢復 ${done} 道顏色。點<b>迎賓碼頭</b>可以再玩一次，其他地方先看看故事預告。`
-    : "點一下<b>迎賓碼頭</b>開始冒險。其他地方可以先看看故事預告。";
+  const fresh = LEVELS.filter((l) => isOpen(l) && !P.explored.includes(l.id)).map((l) => `<b>${l.zh}</b>`);
+  $("#mapHint").innerHTML = (done ? `彩虹已經恢復 ${done} 道顏色。` : "") +
+    (fresh.length ? `點${fresh.join("或")}開始冒險。` : "去過的地方都可以再玩一次。") + "標著「下次冒險」的地方可以先看故事預告。";
 }
 function onSpot(id) {
   const l = levelById(id); if (!l) return;
   chime("pop");
-  if (l.status === "playable") { startLevel(id); return; }
+  if (isOpen(l)) { startLevel(id); return; }
+  const waiting = l.status === "playable";
   $("#pvH").textContent = `${l.zh} ${l.name}`;
+  $("#pvTag").textContent = waiting ? needText(l) : "下次冒險";
   $("#pvArt").innerHTML = `<svg viewBox="-80 -70 160 130" aria-hidden="true">${PLACE_ICONS[l.icon]}</svg>`;
   $("#pvText").textContent = l.preview.zh;
   $("#pvTheme").textContent = `主題：${l.theme}。會聽到的句子：`;
   $("#pvSample").innerHTML = l.preview.sample.map((s) => `<li class="en">${esc(s)}</li>`).join("");
-  $("#pvWish").textContent = S.progress.wish === id ? "孩子說下次想來這裡！內容準備好後就能出發。" : "這個地點正在準備中，目前還不能玩。";
+  $("#pvWish").textContent = waiting ? `這裡已經準備好了！${needText(l)}冒險，這裡就會打開。`
+    : S.progress.wish === id ? "孩子說下次想來這裡！內容準備好後就能出發。" : "這個地點正在準備中，目前還不能玩。";
+  $("#pvH2").textContent = waiting ? "故事預告" : "故事預告・還不能玩";
   openOv("ovPreview");
 }
 $("#mapSvg").addEventListener("click", (e) => { const g = e.target.closest(".spot"); if (g) onSpot(g.dataset.level); });
@@ -797,16 +830,101 @@ $("#mapSvg").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key
 $("#mapHome").addEventListener("click", () => { renderWho(); show("scrHome"); });
 
 /* ================= scene ================= */
-function buildScene(level) {
-  const lit = S.progress.shards.filter((id) => id !== level.id);
-  $("#scene").innerHTML = `
+const strip = (svg) => svg.replace(/<\/?svg[^>]*>/g, "");
+/* host characters, drawn with feet at (0,0); class names drive poses and talking */
+const HOSTS = {
+  bunny: `
+    <ellipse cx="-24" cy="-170" rx="14" ry="44" fill="#FFFDF7" stroke="#36424A" stroke-width="3" transform="rotate(-8 -24 -170)"/>
+    <ellipse cx="-24" cy="-168" rx="6" ry="30" fill="#F7B9B2" transform="rotate(-8 -24 -168)"/>
+    <g class="ear-r"><ellipse cx="22" cy="-172" rx="14" ry="44" fill="#FFFDF7" stroke="#36424A" stroke-width="3" transform="rotate(10 22 -172)"/>
+    <ellipse cx="22" cy="-170" rx="6" ry="30" fill="#F7B9B2" transform="rotate(10 22 -170)"/></g>
+    <ellipse cx="-22" cy="-4" rx="20" ry="9" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/>
+    <ellipse cx="22" cy="-4" rx="20" ry="9" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/>
+    <ellipse cx="0" cy="-48" rx="48" ry="50" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/>
+    <ellipse cx="0" cy="-40" rx="30" ry="32" fill="#FFF3D6"/>
+    <ellipse cx="-46" cy="-46" rx="11" ry="24" fill="#FFFDF7" stroke="#36424A" stroke-width="3" transform="rotate(14 -46 -46)"/>
+    <g class="arm-r"><ellipse cx="46" cy="-44" rx="11" ry="24" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/></g>
+    <circle cx="0" cy="-112" r="46" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/>
+    <path d="M-34 -76 Q0 -60 34 -76 L30 -64 Q0 -50 -30 -64 Z" fill="#F28B82"/>
+    <circle cx="-16" cy="-118" r="5.5" fill="#36424A"/><circle cx="16" cy="-118" r="5.5" fill="#36424A"/>
+    <circle cx="-14" cy="-120" r="1.8" fill="#FFFDF7"/><circle cx="18" cy="-120" r="1.8" fill="#FFFDF7"/>
+    <circle cx="-29" cy="-100" r="8" fill="#F28B82" opacity=".45"/><circle cx="29" cy="-100" r="8" fill="#F28B82" opacity=".45"/>
+    <ellipse cx="0" cy="-106" rx="5" ry="3.5" fill="#E8766C"/>
+    <path class="mouth-smile" d="M-9 -98 Q0 -88 9 -98" stroke="#36424A" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse class="mouth-talk" cx="0" cy="-94" rx="6" ry="6" fill="#C95E55"/>
+`,
+  bear: `
+    <circle cx="-34" cy="-148" r="17" fill="#B98B61" stroke="#36424A" stroke-width="3"/><circle cx="-34" cy="-148" r="8" fill="#E9C9A3"/>
+    <g class="ear-r"><circle cx="34" cy="-148" r="17" fill="#B98B61" stroke="#36424A" stroke-width="3"/><circle cx="34" cy="-148" r="8" fill="#E9C9A3"/></g>
+    <ellipse cx="-24" cy="-4" rx="22" ry="10" fill="#A27650" stroke="#36424A" stroke-width="3"/>
+    <ellipse cx="24" cy="-4" rx="22" ry="10" fill="#A27650" stroke="#36424A" stroke-width="3"/>
+    <ellipse cx="0" cy="-50" rx="54" ry="52" fill="#B98B61" stroke="#36424A" stroke-width="3"/>
+    <ellipse cx="0" cy="-42" rx="32" ry="33" fill="#EBD3B0"/>
+    <ellipse cx="-50" cy="-48" rx="12" ry="25" fill="#B98B61" stroke="#36424A" stroke-width="3" transform="rotate(14 -50 -48)"/>
+    <g class="arm-r"><ellipse cx="50" cy="-46" rx="12" ry="25" fill="#B98B61" stroke="#36424A" stroke-width="3"/></g>
+    <circle cx="0" cy="-112" r="48" fill="#B98B61" stroke="#36424A" stroke-width="3"/>
+    <path d="M-36 -74 Q0 -58 36 -74 L32 -62 Q0 -48 -32 -62 Z" fill="#5E9E6E"/>
+    <ellipse cx="0" cy="-97" rx="23" ry="17" fill="#EBD3B0"/>
+    <circle cx="-17" cy="-122" r="5.5" fill="#36424A"/><circle cx="17" cy="-122" r="5.5" fill="#36424A"/>
+    <circle cx="-15" cy="-124" r="1.8" fill="#FFFDF7"/><circle cx="19" cy="-124" r="1.8" fill="#FFFDF7"/>
+    <g class="lids" fill="#B98B61" stroke="#36424A" stroke-width="2.5"><path d="M-24 -121 a7 7 0 0 1 14 0 z"/><path d="M10 -121 a7 7 0 0 1 14 0 z"/></g>
+    <circle cx="-32" cy="-104" r="8" fill="#F28B82" opacity=".4"/><circle cx="32" cy="-104" r="8" fill="#F28B82" opacity=".4"/>
+    <ellipse cx="0" cy="-104" rx="8" ry="5.5" fill="#36424A"/>
+    <path class="mouth-smile" d="M-9 -94 Q0 -86 9 -94" stroke="#36424A" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse class="mouth-talk" cx="0" cy="-90" rx="6" ry="5.5" fill="#C95E55"/>
+`
+};
+function hostSvg(host, x, y) {
+  return `<g transform="translate(${x} ${y})"><g id="host" class="b-bob${host.start ? " " + host.start : ""}" data-talk="${host.id}">
+  ${HOSTS[host.id] || HOSTS.bunny}
+    <g class="held held-drinks" transform="translate(70 -110)">
+      <rect x="-6" y="40" width="96" height="10" rx="5" fill="#C99B6A"/>
+      <g transform="translate(0 -6) scale(.72)">${ICONS.water.replace(/<\/?svg[^>]*>/g, "")}</g>
+      <g transform="translate(42 -10) scale(.78)">${ICONS.milk.replace(/<\/?svg[^>]*>/g, "")}</g>
+    </g>
+    <g class="held held-gift" transform="translate(68 -116)">
+      <circle cx="30" cy="30" r="28" fill="#FBE5A0" stroke="#F28B82" stroke-width="6"/>
+      <g transform="translate(12 12) scale(.56)">${ICONS.star.replace(/<\/?svg[^>]*>/g, "")}</g>
+      <g transform="translate(12 52) scale(.9)">${ICONS.ribbon.replace(/<\/?svg[^>]*>/g, "")}</g>
+    </g>
+    <g class="held held-apple" transform="translate(78 -112)"><g transform="scale(.8)">${strip(ICONS.apple)}</g></g>
+  </g></g>
+  <g transform="translate(${x} ${y - 206})"><g id="hearts" class="hearts">
+    <path d="M0 8 C-14 -6 -26 4 -12 18 L0 28 L12 18 C26 4 14 -6 0 8 Z" fill="#F28B82"/>
+    <path transform="translate(-40 18) scale(.6)" d="M0 8 C-14 -6 -26 4 -12 18 L0 28 L12 18 C26 4 14 -6 0 8 Z" fill="#F7B9B2"/>
+    <path transform="translate(40 14) scale(.7)" d="M0 8 C-14 -6 -26 4 -12 18 L0 28 L12 18 C26 4 14 -6 0 8 Z" fill="#F7B9B2"/>
+  </g></g>`;
+}
+const birdSvg = (x, y) => `<g transform="translate(${x} ${y})"><g id="bird" class="bird sad" data-talk="bird">
+    <path d="M-6 18v8M6 18v8" stroke="#F4AE62" stroke-width="3" stroke-linecap="round"/>
+    <path d="M-22 4 q-14 6 -16 -6 q10 0 16 -4z" fill="#5A9EC4"/>
+    <ellipse cx="0" cy="0" rx="24" ry="21" fill="#72B5D8" stroke="#36424A" stroke-width="2.5"/>
+    <ellipse cx="5" cy="7" rx="13" ry="10" fill="#FFF8E6"/>
+    <path class="wing" d="M-17 -2 q-6 16 10 16 q2 -11 -10 -16z" fill="#5A9EC4" stroke="#36424A" stroke-width="2"/>
+    <path d="M-6 -20 q2 -10 9 -4 q2 -8 7 -1" stroke="#36424A" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <g class="eyes-sad"><circle cx="-4" cy="-5" r="2.8" fill="#36424A"/><circle cx="11" cy="-5" r="2.8" fill="#36424A"/>
+      <path d="M-9 -12 l7 3M16 -12 l-7 3" stroke="#36424A" stroke-width="2" stroke-linecap="round"/>
+      <path d="M13 0 q2.5 4 0 7 q-2.5 -3 0 -7z" fill="#5DB7C9"/></g>
+    <g class="eyes-happy"><path d="M-8 -4 q3.5 -5 7 0M7 -4 q3.5 -5 7 0" stroke="#36424A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <circle cx="-9" cy="3" r="3" fill="#F28B82" opacity=".5"/><circle cx="17" cy="3" r="3" fill="#F28B82" opacity=".5"/></g>
+    <path d="M21 -3 l11 4 -11 4z" fill="#F4AE62" stroke="#36424A" stroke-width="1.5" stroke-linejoin="round"/>
+  </g></g>`;
+function flowerSvg(i, x, y) {
+  const petals = [0, 72, 144, 216, 288].map((a) => `<circle cx="${(Math.cos(a * Math.PI / 180) * 8).toFixed(1)}" cy="${(Math.sin(a * Math.PI / 180) * 8 - 2).toFixed(1)}" r="6.5"/>`).join("");
+  return `<g class="flower" transform="translate(${x} ${y})"><path d="M0 2v24" stroke="#4E8A60" stroke-width="4"/><path d="M0 16q-10-6-12 2q8 4 12-2z" fill="#5E9E6E"/><g class="petals" fill="#D8D9D2">${petals}</g><circle cx="0" cy="-2" r="5" fill="#FFF8E6"/></g>`;
+}
+const SKY = (top, bottom) => `<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${top}"/><stop offset="1" stop-color="${bottom}"/></linearGradient>`;
+const RAINBOW = (lit) => `<g id="rainbow">${rainbowPaths(400, 340, 300, 20, lit, 'stroke-dasharray="1000" stroke-dashoffset="0"')}</g>`;
+const SCENES = {
+  dock(level, lit) {
+    return `
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BFE6EE"/><stop offset="1" stop-color="#FFF8E6"/></linearGradient>
     <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6CC0D0"/><stop offset="1" stop-color="#3E98AE"/></linearGradient>
   </defs>
   <rect width="800" height="480" fill="url(#sky)"/>
   <g fill="#FFFDF7" opacity=".9"><ellipse cx="110" cy="230" rx="50" ry="16"/><ellipse cx="140" cy="220" rx="30" ry="18"/><ellipse cx="690" cy="110" rx="46" ry="14"/><ellipse cx="716" cy="100" rx="26" ry="16"/></g>
-  <g id="rainbow">${rainbowPaths(400, 340, 300, 20, lit, 'stroke-dasharray="1000" stroke-dashoffset="0"')}</g>
+  ${RAINBOW(lit)}
   <rect y="338" width="800" height="142" fill="url(#sea)"/>
   <g fill="none" stroke="#FFFDF7" stroke-width="3" stroke-linecap="round" opacity=".55">
     <path class="wave-line" d="M420 400q15-10 30 0t30 0"/><path class="wave-line" d="M600 440q15-10 30 0t30 0"/><path class="wave-line" d="M60 450q15-10 30 0t30 0"/>
@@ -841,50 +959,51 @@ function buildScene(level) {
   <path d="M30 352v20M90 352v20M150 352v20M210 352v20M270 352v20M330 352v20" stroke="#A87C52" stroke-width="3"/>
   <rect x="40" y="372" width="12" height="70" fill="#A87C52"/><rect x="200" y="372" width="12" height="70" fill="#A87C52"/><rect x="340" y="372" width="12" height="70" fill="#A87C52"/>
   <!-- bunny -->
-  <g id="bunnyWrap" transform="translate(205 356)"><g id="bunny" class="b-bob">
-    <ellipse cx="-24" cy="-170" rx="14" ry="44" fill="#FFFDF7" stroke="#36424A" stroke-width="3" transform="rotate(-8 -24 -170)"/>
-    <ellipse cx="-24" cy="-168" rx="6" ry="30" fill="#F7B9B2" transform="rotate(-8 -24 -168)"/>
-    <g class="ear-r"><ellipse cx="22" cy="-172" rx="14" ry="44" fill="#FFFDF7" stroke="#36424A" stroke-width="3" transform="rotate(10 22 -172)"/>
-    <ellipse cx="22" cy="-170" rx="6" ry="30" fill="#F7B9B2" transform="rotate(10 22 -170)"/></g>
-    <ellipse cx="-22" cy="-4" rx="20" ry="9" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/>
-    <ellipse cx="22" cy="-4" rx="20" ry="9" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/>
-    <ellipse cx="0" cy="-48" rx="48" ry="50" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/>
-    <ellipse cx="0" cy="-40" rx="30" ry="32" fill="#FFF3D6"/>
-    <ellipse cx="-46" cy="-46" rx="11" ry="24" fill="#FFFDF7" stroke="#36424A" stroke-width="3" transform="rotate(14 -46 -46)"/>
-    <g class="arm-r"><ellipse cx="46" cy="-44" rx="11" ry="24" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/></g>
-    <circle cx="0" cy="-112" r="46" fill="#FFFDF7" stroke="#36424A" stroke-width="3"/>
-    <path d="M-34 -76 Q0 -60 34 -76 L30 -64 Q0 -50 -30 -64 Z" fill="#F28B82"/>
-    <circle cx="-16" cy="-118" r="5.5" fill="#36424A"/><circle cx="16" cy="-118" r="5.5" fill="#36424A"/>
-    <circle cx="-14" cy="-120" r="1.8" fill="#FFFDF7"/><circle cx="18" cy="-120" r="1.8" fill="#FFFDF7"/>
-    <circle cx="-29" cy="-100" r="8" fill="#F28B82" opacity=".45"/><circle cx="29" cy="-100" r="8" fill="#F28B82" opacity=".45"/>
-    <ellipse cx="0" cy="-106" rx="5" ry="3.5" fill="#E8766C"/>
-    <path class="mouth-smile" d="M-9 -98 Q0 -88 9 -98" stroke="#36424A" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <ellipse class="mouth-talk" cx="0" cy="-94" rx="6" ry="6" fill="#C95E55"/>
-    <g class="held held-drinks" transform="translate(70 -110)">
-      <rect x="-6" y="40" width="96" height="10" rx="5" fill="#C99B6A"/>
-      <g transform="translate(0 -6) scale(.72)">${ICONS.water.replace(/<\/?svg[^>]*>/g, "")}</g>
-      <g transform="translate(42 -10) scale(.78)">${ICONS.milk.replace(/<\/?svg[^>]*>/g, "")}</g>
-    </g>
-    <g class="held held-gift" transform="translate(68 -116)">
-      <circle cx="30" cy="30" r="28" fill="#FBE5A0" stroke="#F28B82" stroke-width="6"/>
-      <g transform="translate(12 12) scale(.56)">${ICONS.star.replace(/<\/?svg[^>]*>/g, "")}</g>
-      <g transform="translate(12 52) scale(.9)">${ICONS.ribbon.replace(/<\/?svg[^>]*>/g, "")}</g>
-    </g>
-  </g></g>
-  <g transform="translate(205 150)"><g id="hearts" class="hearts">
-    <path d="M0 8 C-14 -6 -26 4 -12 18 L0 28 L12 18 C26 4 14 -6 0 8 Z" fill="#F28B82"/>
-    <path transform="translate(-40 18) scale(.6)" d="M0 8 C-14 -6 -26 4 -12 18 L0 28 L12 18 C26 4 14 -6 0 8 Z" fill="#F7B9B2"/>
-    <path transform="translate(40 14) scale(.7)" d="M0 8 C-14 -6 -26 4 -12 18 L0 28 L12 18 C26 4 14 -6 0 8 Z" fill="#F7B9B2"/>
-  </g></g>`;
+  ${hostSvg(level.host, 205, 356)}`;
+  },
+  forest(level, lit) {
+    const flowers = [40, 110, 330, 400, 470, 540, 610, 680, 750, 290].map((x, i) => flowerSvg(i, x, 440 + (i % 2) * 10)).join("");
+    return `
+  <defs>${SKY("#CDEBDB", "#FFF8E6")}</defs>
+  <rect width="800" height="480" fill="url(#sky)"/>
+  <g fill="#FFFDF7" opacity=".85"><ellipse cx="120" cy="80" rx="44" ry="14"/><ellipse cx="146" cy="70" rx="26" ry="16"/></g>
+  ${RAINBOW(lit)}
+  <path d="M0 300 Q120 230 260 280 T540 270 T800 260 V480 H0 Z" fill="#A9D4A0"/>
+  <g><rect x="62" y="230" width="12" height="80" fill="#8A6A4A"/><circle cx="68" cy="210" r="44" fill="#7DB98A"/><circle cx="40" cy="236" r="28" fill="#6AA87A"/>
+     <rect x="452" y="236" width="10" height="70" fill="#8A6A4A"/><circle cx="457" cy="222" r="34" fill="#7DB98A"/></g>
+  <rect y="330" width="800" height="150" fill="#8CC48A"/>
+  <path d="M120 480 C170 420 300 380 420 360 C520 344 600 350 660 336 L700 344 C640 372 540 380 460 400 C340 430 260 450 230 480 Z" fill="#EBD9A8"/>
+  <g>
+    <rect x="636" y="160" width="54" height="210" rx="10" fill="#8A6A4A"/>
+    <ellipse cx="663" cy="300" rx="14" ry="20" fill="#5B4330"/>
+    <path d="M640 236 C610 230 580 226 548 230" stroke="#8A6A4A" stroke-width="13" stroke-linecap="round" fill="none"/>
+    <circle cx="610" cy="130" r="66" fill="#5E9E6E"/><circle cx="700" cy="108" r="78" fill="#4E8A60"/><circle cx="750" cy="176" r="56" fill="#5E9E6E"/><circle cx="660" cy="60" r="44" fill="#6AA87A"/>
+    <circle cx="590" cy="110" r="6" fill="#E8766C"/><circle cx="720" cy="80" r="6" fill="#E8766C"/><circle cx="752" cy="160" r="6" fill="#E8766C"/>
+  </g>
+  ${birdSvg(574, 204)}
+  <path class="shard" id="shard" d="M663 262 l20 16 -7 40 h-26 l-7 -40 z" fill="${level.shardColor}" stroke="#FFFDF7" stroke-width="4" stroke-linejoin="round"/>
+  ${hostSvg(level.host, 220, 404)}
+  ${flowers}`;
+  }
+};
+function buildScene(level) {
+  const lit = S.progress.shards.filter((id) => id !== level.id);
+  const make = SCENES[level.scene] || SCENES.dock;
+  $("#scene").innerHTML = make(level, lit);
   $("#tray").innerHTML = "";
 }
 function setPose(p) {
-  const b = $("#bunny"); if (!b) return;
-  b.classList.remove("pose-wave", "pose-give", "pose-drinks");
+  const b = $("#host"); if (!b) return;
+  b.classList.remove("pose-wave", "pose-give", "pose-drinks", "pose-apple", "pose-listen");
   if (p && p !== "idle") { void b.getBBox(); b.classList.add("pose-" + p); }
 }
-function setTalking(on) { const b = $("#bunny"); b && b.classList.toggle("talking", !!on); }
-function hop() { const w = $("#bunny"); if (!w) return; w.classList.remove("hop"); void w.getBBox(); w.classList.add("hop"); setTimeout(() => w.classList.remove("hop"), 1500); }
+function setTalking(on, key) {
+  $$("#scene [data-talk]").forEach((el) => el.classList.remove("talking"));
+  if (!on) return;
+  const k = key || (run && run.level.host.id);
+  const el = $(`#scene [data-talk="${k}"]`); el && el.classList.add("talking");
+}
+function hop() { const w = $("#host"); if (!w) return; w.classList.remove("hop"); void w.getBBox(); w.classList.add("hop"); setTimeout(() => w.classList.remove("hop"), 1500); }
 
 /* scene feedback — data uses these names in step.feedback */
 const FEEDBACK = {
@@ -926,6 +1045,37 @@ const FEEDBACK = {
     });
     hop();
   },
+  /* ---- shared ---- */
+  hostWave() { setPose("wave"); },
+  openDoor() { const d = $("#door"); d && d.classList.add("open"); },
+  bloom(who, pick) {
+    const colors = { happy: "#F2D46B", sad: "#72B5D8", tired: "#B9A6DA", sleepy: "#B9A6DA", yes: "#F28B82", no: "#F4AE62" };
+    const palette = ["#F28B82", "#F2D46B", "#F4AE62", "#B9A6DA", "#72B5D8"];
+    const n = who === "both" ? 2 : 1;
+    for (let i = 0; i < n; i++) {
+      const f = $("#scene .flower:not(.bloom)"); if (!f) return;
+      const k = $$("#scene .flower.bloom").length;
+      f.querySelector(".petals").setAttribute("fill", colors[pick] || palette[k % palette.length]);
+      f.classList.add("bloom");
+    }
+  },
+  bloomAll() { let guard = 20; while ($("#scene .flower:not(.bloom)") && guard--) FEEDBACK.bloom("chloe"); },
+  /* ---- forest ---- */
+  shareApple(who, pick) {
+    const h = $("#host"); h && h.classList.remove("tired");
+    setPose("idle"); hop();
+    if (pick === "no") return;
+    (who === "both" ? ["chloe", "joey"] : [who]).forEach((id) => {
+      if ($("#apple-" + id)) return;
+      const el = document.createElement("div");
+      el.className = "token " + id; el.id = "apple-" + id;
+      el.innerHTML = ICONS.apple + `<span class="tname">${D.players[id].name}</span>`;
+      $("#tray").appendChild(el);
+    });
+  },
+  birdPeek() { const b = $("#bird"); if (!b) return; b.classList.remove("peek"); void b.getBBox(); b.classList.add("peek"); },
+  birdHappy() { const b = $("#bird"); if (!b) return; b.classList.remove("sad"); b.classList.add("happy"); FEEDBACK.birdPeek(); },
+  hostHappy() { FEEDBACK.bunnyHappy(); },
   bunnyHappy() {
     setPose("idle");
     const h = $("#hearts"); if (h) { h.classList.remove("show"); void h.getBBox(); h.classList.add("show"); }
@@ -998,23 +1148,30 @@ function setControls(phase) {
   $("#waitTip").hidden = !waiting;
   $("#micStatus").hidden = true;
 }
+function fillLines(src, who) { return src.map((l) => ({ en: fill(l.en, who), zh: fill(l.zh || "", who), speaker: l.speaker })); }
 function turnLines(t) {
-  const src = t.sub > 0 && t.step.repeatLines ? t.step.repeatLines : t.step.lines;
-  return src.map((l) => ({ en: fill(l.en, t.who), zh: fill(l.zh, t.who) }));
+  return fillLines(t.sub > 0 && t.step.repeatLines ? t.step.repeatLines : t.step.lines, t.who);
 }
-function renderBubble(lines, speaker) {
+function charOf(key) {
+  const lv = run && run.level;
+  if (!lv) return { name: "", pitch: 1.1 };
+  return (key && lv.cast && lv.cast[key]) || lv.host;
+}
+let curLines = [];
+function renderBubble(lines, label) {
   const b = $("#bubble");
+  curLines = lines;
   b.className = "bubble idle";
-  b.innerHTML = `<span class="who-says">${esc(speaker)}</span>` + lines.map((l, i) => `<span class="ln" data-i="${i}">${esc(l.en)}</span>`).join("");
+  b.innerHTML = `<span class="who-says">${esc(label || charOf(lines[0] && lines[0].speaker).name)}</span>` + lines.map((l, i) => `<span class="ln" data-i="${i}">${esc(l.en)}</span>`).join("");
 }
 function highlightLine(i) {
   const b = $("#bubble");
   b.classList.toggle("idle", i < 0);
   b.querySelectorAll(".ln").forEach((el) => el.classList.toggle("now", +el.dataset.i === i));
-  setTalking(i >= 0);
+  setTalking(i >= 0, i >= 0 && curLines[i] ? curLines[i].speaker : null);
 }
 async function speakLines(lines) {
-  const r = await Voice.say(lines.map((l) => l.en), highlightLine);
+  const r = await Voice.say(lines.map((l) => ({ text: l.en, pitch: charOf(l.speaker).pitch })), highlightLine);
   setTalking(false);
   return r;
 }
@@ -1030,6 +1187,7 @@ function nextTurn() {
   const st = t.step;
   $("#turnChip").innerHTML = run.players.length > 1 ? turnChipFor(t.who) : turnChipFor(t.who).replace("輪到 ", "") ;
   setPose(st.pose);
+  [].concat(st.enter || []).forEach((n) => FEEDBACK[n] && FEEDBACK[n](t.who, null, st));
   // cues
   const cues = $("#cues");
   if (st.cues) {
@@ -1047,7 +1205,7 @@ function nextTurn() {
     <div><span class="k">簡單版</span><div class="ans">${st.answers.simple.map((a) => esc(fill(a, t.who))).join("／")}</div></div>
     <div><span class="k">進階版</span><div class="ans">${st.answers.advanced.map((a) => esc(fill(a, t.who))).join("／")}</div></div>`;
   $("#waitTip").textContent = st.waitTip || "先等約 5～10 秒，必要時用手勢，再提供提示。";
-  renderBubble(lines, run.level.host.name);
+  renderBubble(lines);
   renderFootsteps();
   chime("pop");
   speakLines(lines);
@@ -1066,8 +1224,8 @@ function openHelp() {
 function playHelper() {
   const st = run.turn.step;
   const text = fill(st.helper.en, run.turn.who);
-  renderBubble([{ en: text }], run.level.host.name + " · 小幫手");
-  Voice.say([text], highlightLine).then(() => setTalking(false));
+  renderBubble([{ en: text }], "小幫手");
+  Voice.say([{ text, pitch: charOf().pitch }], highlightLine).then(() => setTalking(false));
   updateVoiceNote();
 }
 async function doContinue() {
@@ -1085,11 +1243,11 @@ async function doContinue() {
   const pick = run.pick || st.defaultCue || null;
   setControls("feedback");
   $("#cues").hidden = true;
-  const fb = FEEDBACK[st.feedback]; fb && fb(t.who, pick);
+  [].concat(st.feedback || []).forEach((n) => FEEDBACK[n] && FEEDBACK[n](t.who, pick, st));
   chime("ok");
   renderFootsteps();
-  const resp = (st.responses[run.pick] || st.responses.default || []).map((l) => ({ en: fill(l.en, t.who), zh: fill(l.zh, t.who) }));
-  renderBubble(resp, run.level.host.name);
+  const resp = fillLines(st.responses[run.pick] || st.responses.default || [], t.who);
+  renderBubble(resp);
   const last = run.qi === run.queue.length - 1;
   $("#nextLabel").textContent = last ? "修復彩虹" : "下一段";
   $("#btnNext").disabled = true;
@@ -1110,12 +1268,13 @@ async function finishLevel() {
   // scene: rainbow stripe, door opens, shard
   const stripe = $(`#rainbow [data-level="${level.id}"]`);
   if (stripe) { stripe.setAttribute("stroke", level.shardColor); stripe.classList.add("lit"); }
-  $("#door").classList.add("open");
-  $("#shard").classList.add("show");
+  [].concat(level.ending.feedback || []).forEach((n) => FEEDBACK[n] && FEEDBACK[n]("both"));
+  const sh = $("#shard"); sh && sh.classList.add("show");
+  if (P.wish === level.id) { P.wish = null; save(); }
   setPose("wave"); hop();
   chime("big");
   const lines = run.challenge && level.ending.challengeLines ? level.ending.challengeLines : level.ending.lines;
-  renderBubble(lines, level.host.name);
+  renderBubble(lines);
   await Promise.all([speakLines(lines), wait(2600)]);
   run.already = already;
   if (!run || run.phase !== "ending" || !$("#ovPause").hidden) return;
@@ -1128,17 +1287,27 @@ function showDone(already) {
   $("#doneReplay").hidden = !already;
   $("#doneChoices").innerHTML = level.ending.nextChoices.map((id) => {
     const l = levelById(id);
-    return `<button data-wish="${id}" aria-pressed="${S.progress.wish === id}"><svg viewBox="-80 -70 160 130" aria-hidden="true">${PLACE_ICONS[l.icon]}</svg>${l.zh}<span class="next-tag">下次冒險</span></button>`;
+    return `<button data-wish="${id}" aria-pressed="${S.progress.wish === id}"><svg viewBox="-80 -70 160 130" aria-hidden="true">${PLACE_ICONS[l.icon]}</svg>${l.zh}<span class="next-tag">${isOpen(l) ? "可以出發" : "下次冒險"}</span></button>`;
   }).join("");
-  $("#doneWish").textContent = S.progress.wish ? wishText(S.progress.wish) : "讓孩子選一個，留到下次去探索。";
+  renderWish();
   $("#btnSwap").textContent = run.players.length > 1 ? "換 " + D.players[run.players[1]].name + " 先開始" : "換 " + (run.players[0] === "chloe" ? "Joey" : "Chloe") + " 玩";
   openOv("ovDone");
 }
-function wishText(id) { const l = levelById(id); return `好！下次冒險想去「${l.zh}」。地點準備好後，地圖上就能出發。`; }
+function wishText(id) {
+  const l = levelById(id);
+  return isOpen(l) ? `好！下次去「${l.zh}」。想現在就去也可以，或改天再從地圖出發。` : `好！下次冒險想去「${l.zh}」。地點準備好後，地圖上就能出發。`;
+}
+function renderWish() {
+  const w = S.progress.wish && run && run.level.ending.nextChoices.includes(S.progress.wish) ? S.progress.wish : null;
+  $("#doneWish").textContent = w ? wishText(w) : "讓孩子選一個，留到下次去探索。";
+  const go = $("#btnGoWish");
+  go.hidden = !(w && isOpen(levelById(w)));
+  if (!go.hidden) go.textContent = `現在去${levelById(w).zh}`;
+}
 
 /* ================= play events ================= */
 $("#btnStart").addEventListener("click", () => { primeAudio(); nextTurn(); });
-$("#btnReplay").addEventListener("click", () => { if (run && run.turn) { const l = turnLines(run.turn); renderBubble(l, run.level.host.name); speakLines(l); } });
+$("#btnReplay").addEventListener("click", () => { if (run && run.turn) { const l = turnLines(run.turn); renderBubble(l); speakLines(l); } });
 $("#btnHelp").addEventListener("click", () => { if (run && run.turn) openHelp(); });
 $("#btnHelper").addEventListener("click", () => { if (run && run.turn) playHelper(); });
 $("#btnZh").addEventListener("click", () => {
@@ -1165,8 +1334,9 @@ $("#doneChoices").addEventListener("click", (e) => {
   const b = e.target.closest("[data-wish]"); if (!b) return;
   S.progress.wish = b.dataset.wish; save(); chime("pop");
   $$("#doneChoices [data-wish]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
-  $("#doneWish").textContent = wishText(b.dataset.wish);
+  renderWish();
 });
+$("#btnGoWish").addEventListener("click", () => { const id = S.progress.wish; closeOv("ovDone"); startLevel(id); });
 $("#btnAgain").addEventListener("click", () => { closeOv("ovDone"); startLevel(run.level.id); });
 $("#btnSwap").addEventListener("click", () => {
   if (run.players.length > 1) S.settings.lead = run.players[1];
@@ -1217,20 +1387,19 @@ function renderParent() {
   $("#leadRow").hidden = st.mode !== "both";
   seg($("#segLead"), [{ v: "chloe", t: "Chloe 先" }, { v: "joey", t: "Joey 先" }], st.lead, (v) => { st.lead = v; save(); renderParent(); });
   $("#modeNote").hidden = !(run && run.phase !== "intro");
-  const lvC = (run && run.level) || LEVELS.find((l) => l.status === "playable");
+  const lvs = run ? [run.level] : LEVELS.filter((l) => l.status === "playable");
   seg($("#segChallengeP"), [{ v: "basic", t: "簡單模式" }, { v: "challenge", t: "挑戰模式" }], st.challenge ? "challenge" : "basic", (v) => {
     st.challenge = v === "challenge"; save(); renderParent();
     if (run && run.phase === "intro") startLevel(run.level.id);
   });
-  $("#challengeNoteP").textContent = challengeDesc(lvC) + (run && run.phase !== "intro" ? " 冒險進行中：會在下一次冒險開始時使用。" : "");
+  $("#challengeNoteP").textContent = lvs.map((l) => `${l.zh}：${challengeDesc(l)}`).join(" ") + (run && run.phase !== "intro" ? " 冒險進行中：會在下一次冒險開始時使用。" : "");
   seg($("#segHints"), [{ v: "more", t: "較多提示" }, { v: "fewer", t: "較少提示" }], st.hints, (v) => { st.hints = v; save(); renderParent(); });
   seg($("#segRate"), [{ v: "slow", t: "慢一點" }, { v: "normal", t: "一般" }], st.rate, (v) => { st.rate = v; save(); renderParent(); renderSpeed(); });
   updateVoiceStatus();
-  // reference answers for the dock (or current level)
-  const lv = (run && run.level) || LEVELS.find((l) => l.status === "playable");
-  $("#refH").textContent = `本關參考回答：${lv.zh}`;
-  $("#refTable").innerHTML = `<tr><th>對話</th><th>小兔子說</th><th>簡單版</th><th>進階版</th></tr>` + lv.steps.map((s) =>
-    `<tr><td>${esc(s.title)}</td><td class="en">${s.lines.map((l) => esc(refText(l.en))).join(" ")}</td><td class="en">${s.answers.simple.map((a) => esc(refText(a))).join("<br>")}</td><td class="en">${s.answers.advanced.map((a) => esc(refText(a))).join("<br>")}</td></tr>`).join("");
+  // reference answers: the current level, or every playable level
+  $("#refH").textContent = `參考回答：${lvs.map((l) => l.zh).join("、")}`;
+  $("#refTable").innerHTML = lvs.map((lv) => `<tr><th colspan="4">${esc(lv.zh)}</th></tr><tr><th>對話</th><th>角色說</th><th>簡單版</th><th>進階版</th></tr>` + lv.steps.map((s) =>
+    `<tr><td>${esc(s.title)}</td><td class="en">${s.lines.map((l) => esc((l.speaker ? (lv.cast[l.speaker].name + ": ") : "") + refText(l.en))).join(" ")}</td><td class="en">${s.answers.simple.map((a) => esc(refText(a))).join("<br>")}</td><td class="en">${s.answers.advanced.map((a) => esc(refText(a))).join("<br>")}</td></tr>`).join("")).join("");
   $("#micSupport").textContent = SR ? "這個瀏覽器有內建語音辨識，可以選擇開啟。" : "這個瀏覽器不支援語音辨識，小耳朵不會出現；遊戲完全不受影響。";
   $("#chkMic").checked = !!st.mic; $("#chkMic").disabled = !SR;
   const P = S.progress;
